@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: From a Spreadsheet to a Database</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap-responsive.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <div class="row-fluid">
+        <div class="span10 offset1">
+          <h1 class="title">From a Spreadsheet to a Database</h1>
+          <h2 class="subtitle">Extracting Data</h2>
+          <div id="learning-objectives" class="objectives">
+          <h2>Learning Objectives</h2>
+          <ul>
+          <li>FIXME</li>
+          </ul>
+          </div>
+          <p>The first step is to turn the rows of the spreadsheet into (key, author) pairs. Let's start by making sure that Python can read the spreadsheet properly:</p>
+          <pre class="sourceCode python"><code class="sourceCode python"><span class="co"># count-lines.py</span>
+          <span class="co"># Count how many lines there are in the spreadsheet</span>
+          <span class="ch">import</span> sys
+          
+          filename = sys.argv[<span class="dv">1</span>]
+          reader = <span class="dt">open</span>(filename, <span class="st">&#39;r&#39;</span>)
+          count = <span class="dv">0</span>
+          <span class="kw">for</span> line in reader:
+              count += <span class="dv">1</span>
+          reader.close()
+          <span class="dt">print</span> count</code></pre>
+          <p>This should look familiar by now: the filename is given as the first command-line argument (<code>sys.argv[1]</code>), so we open that file and use a <code>for</code> loop to read it line by line. Each time the loop executes, it adds 1 to a variable called <code>count</code>; when the loop finishes, we close the file and print the count.</p>
+          <p>We can run this program like this:</p>
+          <pre class="input"><code>$ python code/count-lines.py data/bibliography.csv</code></pre>
+          <p>Sure enough, its output is:</p>
+          <pre class="output"><code>2937</code></pre>
+          <p>so we know that Python is reading all of the rows.</p>
+          <p>The next step is to break each line into fields so that we can get each entry's key and authors. The fields are separated by commas, so we could try using <code>str.split</code>. This won't work, though, because authors' names also contain commas (since they are formatted as &quot;last, first&quot;).</p>
+          <p>What we can do instead is ask our favorite search engine for help. Sure enough, a search for &quot;python csv&quot; turns up <a href="https://docs.python.org/2/library/csv.html">a library called <code>csv</code></a>, which is part of the standard Python distribution. Its documentation includes a few examples, and after a couple of experiments, we come up with this:</p>
+          <pre class="{.python"><code># read-fields.py
+          # Make sure we can read the fields from a CSV file.
+          
+          import sys
+          import csv
+          
+          raw = open(sys.argv[1], &#39;r&#39;)
+          reader = csv.reader(raw);
+          for line in reader:
+              print line
+          reader.close()</code></pre>
+          <p>This program starts by opening the bibliography file (again, we'll pass its name as the first command-line argument). It then calls <code>csv.reader</code> to create a wrapper around the file. When the basic file object created by <code>open</code> reads a line at a time, the wrapper created by <code>csv.reader</code> breaks that line into fields at the right places. It knows how to handle commas embedded in fields, special characters, and a bunch of other things that we don't want to have to worry about.</p>
+          <p>To check that it's working correctly, we just print out each line after it has been processed by the CSV reader. Its first few lines of output are:</p>
+          <pre class="input"><code>$ python code/read-fields.py data/bibliography.csv | head -5</code></pre>
+          <pre class="output"><code>[&#39;8SW85SQM&#39;, &#39;journalArticle&#39;, &#39;2013&#39;, &#39;McClelland, James L&#39;, &#39;Incorporating Rapid Neocortical Learning of New Schema-Consistent Information Into Complementary Learning Systems Theory.&#39;, &#39;J Exp Psychol Gen&#39;, &#39;&#39;, &#39;1939-2222&#39;, &#39;&#39;, &#39;http://www.biomedsearch.com/nih/Incorporating-Rapid-Neocortical-Learning-New/23978185.html&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;]
+          [&#39;85QV9X5F&#39;, &#39;journalArticle&#39;, &#39;1995&#39;, &quot;McClelland, J. L.; McNaughton, B. L.; O&#39;Reilly, R. C.&quot;, &#39;Why There are Complementary Learning Systems in the Hippocampus and Neocortex: Insights from the Successes and Failures of Connectionist Models of Learning and Memory&#39;, &#39;Psychological Review&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;]
+          [&#39;Z4X6DT6N&#39;, &#39;journalArticle&#39;, &#39;1990&#39;, &#39;Ratcliff, R.&#39;, &#39;Connectionist models of recognition memory: constraints imposed by learning and forgetting functions.&#39;, &#39;Psychological review&#39;, &#39;&#39;, &#39;0033-295X&#39;, &#39;&#39;, &#39;http://view.ncbi.nlm.nih.gov/pubmed/2186426&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;]
+          [&#39;F5DGU3Q4&#39;, &#39;bookSection&#39;, &#39;1989&#39;, &#39;McCloskey, M.; Cohen, N. J.&#39;, &#39;Catastrophic Interference in Connectionist Networks: The Sequential Learning Problem&#39;, &#39;The Psychology of Learning and Motivation, Vol. 24&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;]
+          [&#39;PNGQMCP5&#39;, &#39;conferencePaper&#39;, &#39;2006&#39;, &#39;Bucilu\xc7\x8e, Cristian; Caruana, Rich; Niculescu-Mizil, Alexandru&#39;, &#39;Model compression&#39;, &#39;Proceedings of the 12th ACM SIGKDD international conference on Knowledge discovery and data mining&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;]</code></pre>
+          <p>(Notice that we run the program's output through <code>head</code> to only display the first few lines rather than scrolling back through its output.) This is exactly what we need: the key is in the first element of each list, and the authors are all together in the fourth. Let's modify the program to print out just those two fields:</p>
+          <pre class="sourceCode python"><code class="sourceCode python"><span class="co"># display-fields.py</span>
+          <span class="co"># Print the key and all the authors</span>
+          
+          <span class="ch">import</span> sys
+          <span class="ch">import</span> csv
+          
+          raw = <span class="dt">open</span>(sys.argv[<span class="dv">1</span>], <span class="st">&#39;r&#39;</span>)
+          reader = csv.reader(raw);
+          <span class="kw">for</span> line in reader:
+              <span class="dt">print</span> line[<span class="dv">0</span>], line[<span class="dv">3</span>]
+          reader.close()</code></pre>
+          <p>Its output is:</p>
+          <pre class="output"><code>8SW85SQM McClelland, James L
+          85QV9X5F McClelland, J. L.; McNaughton, B. L.; O&#39;Reilly, R. C.
+          Z4X6DT6N Ratcliff, R.
+          F5DGU3Q4 McCloskey, M.; Cohen, N. J.
+          PNGQMCP5 Buciluǎ, Cristian; Caruana, Rich; Niculescu-Mizil, Alexandru</code></pre>
+          <p>The last step is to turn lines with multiple authors into multiple lines, each with a single author. This is the right time to use <code>str.split</code>: the authors' names are separated by semi-colons, so we can break each list of authors on those and use another loop to print the results one by one:</p>
+          <pre class="input"><code>$ python code/display-authors-1.py data/bibliography.csv | head -10</code></pre>
+          <pre class="output"><code>8SW85SQM McClelland, James L
+          85QV9X5F McClelland, J. L.
+          85QV9X5F  McNaughton, B. L.
+          85QV9X5F  O&#39;Reilly, R. C.
+          Z4X6DT6N Ratcliff, R.
+          F5DGU3Q4 McCloskey, M.
+          F5DGU3Q4  Cohen, N. J.
+          PNGQMCP5 Buciluǎ, Cristian
+          PNGQMCP5  Caruana, Rich
+          PNGQMCP5  Niculescu-Mizil, Alexandru</code></pre>
+          <p>That's close to what we want, but not quite right: since authors' names are actually separated by a semi-colon and a space, and we're only splitting on semi-colons, the second and subsequent name on each line comes out with an unwanted space at the front. What happens if we try to split on a semi-colon plus a space?</p>
+          <pre class="sourceCode python"><code class="sourceCode python"><span class="co"># display-authors-2.py</span>
+          <span class="co"># Print (key, author) pairs.</span>
+          
+          <span class="ch">import</span> sys
+          <span class="ch">import</span> csv
+          
+          raw = <span class="dt">open</span>(sys.argv[<span class="dv">1</span>], <span class="st">&#39;r&#39;</span>)
+          reader = csv.reader(raw);
+          <span class="kw">for</span> line in reader:
+              key, authors = line[<span class="dv">0</span>], line[<span class="dv">3</span>]
+              <span class="kw">for</span> auth in authors.split(<span class="st">&#39;; &#39;</span>): <span class="co"># semi-colon plus space instead of semi-colon</span>
+                  <span class="dt">print</span> key, auth
+          reader.close()</code></pre>
+          <pre class="output"><code>8SW85SQM McClelland, James L
+          85QV9X5F McClelland, J. L.
+          85QV9X5F McNaughton, B. L.
+          85QV9X5F O&#39;Reilly, R. C.
+          Z4X6DT6N Ratcliff, R.
+          F5DGU3Q4 McCloskey, M.
+          F5DGU3Q4 Cohen, N. J.
+          PNGQMCP5 Buciluǎ, Cristian
+          PNGQMCP5 Caruana, Rich
+          PNGQMCP5 Niculescu-Mizil, Alexandru</code></pre>
+          <p>And that's that: the first step of our data extraction is done.</p>
+          <div id="fixme" class="challenge">
+          <h2>FIXME</h2>
+          <p>FIXME: split on semi-colon and then strip in case some entries only have semi-colons.</p>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Email</a>
+        <a class="label swc-blue-bg" href="http://github.com/swcarpentry">GitHub</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+        <a class="bugreport label swc-blue-bg" href="mailto:admin@software-carpentry.org?subject=bug%20in%20{{page.path}}">Bug Report</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="http://software-carpentry.org/v5/js/bootstrap/bootstrap.min.js"></script>
+  </body>
+</html>
