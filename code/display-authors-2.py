@@ -10,4 +10,4 @@ for line in reader:
     key, authors = line[0], line[3]
     for auth in authors.split('; '): # semi-colon plus space instead of semi-colon
         print key, auth
-reader.close()
+raw.close()

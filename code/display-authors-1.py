@@ -10,4 +10,4 @@ for line in reader:
     key, authors = line[0], line[3]
     for auth in authors.split(';'):
         print key, auth
-reader.close()
+raw.close()

@@ -8,4 +8,4 @@ raw = open(sys.argv[1], 'r')
 reader = csv.reader(raw);
 for line in reader:
     print line
-reader.close()
+raw.close()

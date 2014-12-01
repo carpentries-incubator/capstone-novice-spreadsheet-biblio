@@ -75,7 +75,7 @@ raw = open(sys.argv[1], 'r')
 reader = csv.reader(raw);
 for line in reader:
     print line
-reader.close()
+raw.close()
 ~~~
 
 This program starts by opening the bibliography file
@@ -120,7 +120,7 @@ raw = open(sys.argv[1], 'r')
 reader = csv.reader(raw);
 for line in reader:
     print line[0], line[3]
-reader.close()
+raw.close()
 ~~~
 
 Its output is:
@@ -175,7 +175,7 @@ for line in reader:
     key, authors = line[0], line[3]
     for auth in authors.split('; '): # semi-colon plus space instead of semi-colon
         print key, auth
-reader.close()
+raw.close()
 ~~~
 ~~~ {.output}
 8SW85SQM McClelland, James L
@@ -192,6 +192,47 @@ PNGQMCP5 Niculescu-Mizil, Alexandru
 
 And that's that:
 the first step of our data extraction is done.
+Since we've achieved something useful,
+we save it for posterity:
+
+~~~ {.input}
+$ git init .
+~~~
+~~~ {.output}
+Initialized empty Git repository in /Users/aturing/lessons/capstone-novice-spreadsheet-biblio/.git
+~~~
+~~~ {.input}
+$ git add -A
+$ git status
+~~~
+~~~ {.output}
+On branch master
+
+Initial commit
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+
+  new file:   code/count-lines.py
+  new file:   code/display-authors-1.py
+  new file:   code/display-authors-2.py
+  new file:   code/display-fields.py
+  new file:   code/read-fields.py
+  new file:   data/bibliography.csv
+~~~
+~~~ {.input}
+$ git commit -m "Extracting (key, author) pairs from bibliography"
+~~~
+~~~ {.output}
+[master (root-commit) 9db78ed] Extracting (key, author) pairsfrom bibliography
+ 6 files changed, 2996 insertions(+)
+ create mode 100644 code/count-lines.py
+ create mode 100644 code/display-authors-1.py
+ create mode 100644 code/display-authors-2.py
+ create mode 100644 code/display-fields.py
+ create mode 100644 code/read-fields.py
+ create mode 100644 data/bibliography.csv
+~~~
 
 > ## FIXME {.challenge}
 >
