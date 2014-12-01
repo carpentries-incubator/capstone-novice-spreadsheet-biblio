@@ -63,7 +63,7 @@
           reader = csv.reader(raw);
           for line in reader:
               print line
-          reader.close()</code></pre>
+          raw.close()</code></pre>
           <p>This program starts by opening the bibliography file (again, we'll pass its name as the first command-line argument). It then calls <code>csv.reader</code> to create a wrapper around the file. When the basic file object created by <code>open</code> reads a line at a time, the wrapper created by <code>csv.reader</code> breaks that line into fields at the right places. It knows how to handle commas embedded in fields, special characters, and a bunch of other things that we don't want to have to worry about.</p>
           <p>To check that it's working correctly, we just print out each line after it has been processed by the CSV reader. Its first few lines of output are:</p>
           <pre class="input"><code>$ python code/read-fields.py data/bibliography.csv | head -5</code></pre>
@@ -83,7 +83,7 @@
           reader = csv.reader(raw);
           <span class="kw">for</span> line in reader:
               <span class="dt">print</span> line[<span class="dv">0</span>], line[<span class="dv">3</span>]
-          reader.close()</code></pre>
+          raw.close()</code></pre>
           <p>Its output is:</p>
           <pre class="output"><code>8SW85SQM McClelland, James L
           85QV9X5F McClelland, J. L.; McNaughton, B. L.; O&#39;Reilly, R. C.
@@ -115,7 +115,7 @@
               key, authors = line[<span class="dv">0</span>], line[<span class="dv">3</span>]
               <span class="kw">for</span> auth in authors.split(<span class="st">&#39;; &#39;</span>): <span class="co"># semi-colon plus space instead of semi-colon</span>
                   <span class="dt">print</span> key, auth
-          reader.close()</code></pre>
+          raw.close()</code></pre>
           <pre class="output"><code>8SW85SQM McClelland, James L
           85QV9X5F McClelland, J. L.
           85QV9X5F McNaughton, B. L.
@@ -126,7 +126,33 @@
           PNGQMCP5 Buciluǎ, Cristian
           PNGQMCP5 Caruana, Rich
           PNGQMCP5 Niculescu-Mizil, Alexandru</code></pre>
-          <p>And that's that: the first step of our data extraction is done.</p>
+          <p>And that's that: the first step of our data extraction is done. Since we've achieved something useful, we save it for posterity:</p>
+          <pre class="input"><code>$ git init .</code></pre>
+          <pre class="output"><code>Initialized empty Git repository in /Users/aturing/lessons/capstone-novice-spreadsheet-biblio/.git</code></pre>
+          <pre class="input"><code>$ git add -A
+          $ git status</code></pre>
+          <pre class="output"><code>On branch master
+          
+          Initial commit
+          
+          Changes to be committed:
+            (use &quot;git rm --cached &lt;file&gt;...&quot; to unstage)
+          
+            new file:   code/count-lines.py
+            new file:   code/display-authors-1.py
+            new file:   code/display-authors-2.py
+            new file:   code/display-fields.py
+            new file:   code/read-fields.py
+            new file:   data/bibliography.csv</code></pre>
+          <pre class="input"><code>$ git commit -m &quot;Extracting (key, author) pairs from bibliography&quot;</code></pre>
+          <pre class="output"><code>[master (root-commit) 9db78ed] Extracting (key, author) pairsfrom bibliography
+           6 files changed, 2996 insertions(+)
+           create mode 100644 code/count-lines.py
+           create mode 100644 code/display-authors-1.py
+           create mode 100644 code/display-authors-2.py
+           create mode 100644 code/display-fields.py
+           create mode 100644 code/read-fields.py
+           create mode 100644 data/bibliography.csv</code></pre>
           <div id="fixme" class="challenge">
           <h2>FIXME</h2>
           <p>FIXME: split on semi-colon and then strip in case some entries only have semi-colons.</p>

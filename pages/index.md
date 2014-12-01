@@ -23,8 +23,9 @@ that would otherwise be difficult or impossible to work with.
 
 ## Topics
 
-1.  [Topic Title 1](01-one.html)
-2.  [Topic Title 2](02-two.html)
+1.  [Introduction](01-intro.html)
+2.  [Extracting Data](02-extract.html)
+3.  [Storing Data in a Database](03-db.html)
 
 ## Other Resources
 
