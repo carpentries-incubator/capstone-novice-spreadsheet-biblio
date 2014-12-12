@@ -27,79 +27,79 @@
         <div class="span10 offset1">
           <h1 class="title">From a Spreadsheet to a Database</h1>
           <h2 class="subtitle">Introduction</h2>
-          <div id="learning-objectives" class="objectives">
-          <h2>Learning Objectives</h2>
-          <ul>
-          <li>Explain why the initial spreadsheet is hard to work with.</li>
-          <li>Explain why a single-table database would be more usable.</li>
-          </ul>
-          </div>
-          <p>Our starting point is a spreadsheet called <code>bibliography.csv</code> with 2937 rows like this:</p>
-          <table>
-          <thead>
-          <tr class="header">
-          <th align="left">key</th>
-          <th align="left">type</th>
-          <th align="left">year</th>
-          <th align="left">authors</th>
-          <th align="left">title</th>
-          <th align="left">journal</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr class="odd">
-          <td align="left">8SW85SQM</td>
-          <td align="left">journalArticle</td>
-          <td align="left">2013</td>
-          <td align="left">McClelland, James L</td>
-          <td align="left">Incorporating Rapid Neocortical Learning of New Schema-Consistent Information Into Complementary Learning Systems Theory.</td>
-          <td align="left">J Exp Psychol Gen</td>
-          </tr>
-          <tr class="even">
-          <td align="left">85QV9X5F</td>
-          <td align="left">journalArticle</td>
-          <td align="left">1995</td>
-          <td align="left">McClelland, J. L.; McNaughton, B. L.; O'Reilly, R. C.</td>
-          <td align="left">Why There are Complementary Learning Systems in the Hippocampus and Neocortex: Insights from the Successes and Failures of Connectionist Models of Learning and Memory</td>
-          <td align="left">Psychological Review</td>
-          </tr>
-          <tr class="odd">
-          <td align="left">Z4X6DT6N</td>
-          <td align="left">journalArticle</td>
-          <td align="left">1990</td>
-          <td align="left">Ratcliff, R.</td>
-          <td align="left">Connectionist models of recognition memory: constraints imposed by learning and forgetting functions.</td>
-          <td align="left">Psychological review</td>
-          </tr>
-          </tbody>
-          </table>
-          <p>We'd like to know:</p>
-          <ul>
-          <li><p>How many papers has each person contributed to?</p></li>
-          <li><p>Who collaborates with whom?</p></li>
-          </ul>
-          <p>If we only cared about one author, we could search for her name in the spreadsheet to answer the first question, then select those rows and manually tally her co-authors to answer the second. But doing that for all of the authors one by one would take days, we'd almost certainly make mistakes, and then someone would almost certainly hand us another, larger spreadsheet and we'd have to start over.</p>
-          <p>Here's what we're going to do instead:</p>
-          <ol style="list-style-type: decimal">
-          <li><p>Write a little Python program to print (key, author) pairs for every contributor to every paper. For example, this program will turn the first three rows of the spreadsheet into:</p>
-          <pre><code>8SW85SQM McClelland, James L
-          85QV9X5F McClelland, J. L.
-          85QV9X5F McNaughton, B. L.
-          85QV9X5F O&#39;Reilly, R. C.
-          Z4X6DT6N Ratcliff, R.</code></pre></li>
-          <li><p>Create an SQL database with one table called <code>authors</code> and insert each (key, author) pair into that table.</p></li>
-          <li><p>Use SQL queries to answer our original questions.</p></li>
-          </ol>
-          <p>This might seem like a lot of work to answer two questions, but it's the right approach for several reasons:</p>
-          <ul>
-          <li><p>Once the data is in a database, it will be easy to ask and answer many other questions.</p></li>
-          <li><p>We'll be able to re-use our tools on the next spreadsheet we're given.</p></li>
-          <li><p>We'll have a record of what we did (something that clicking in a spreadsheet won't give us).</p></li>
-          </ul>
-          <div id="fixme" class="challenge">
-          <h2>FIXME</h2>
-          <p>FIXME</p>
-          </div>
+<div id="learning-objectives" class="objectives objectives">
+<h2>Learning Objectives</h2>
+<ul>
+<li>Explain why the initial spreadsheet is hard to work with.</li>
+<li>Explain why a single-table database would be more usable.</li>
+</ul>
+</div>
+<p>Our starting point is a spreadsheet called <code>bibliography.csv</code> with 2937 rows like this:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">key</th>
+<th align="left">type</th>
+<th align="left">year</th>
+<th align="left">authors</th>
+<th align="left">title</th>
+<th align="left">journal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">8SW85SQM</td>
+<td align="left">journalArticle</td>
+<td align="left">2013</td>
+<td align="left">McClelland, James L</td>
+<td align="left">Incorporating Rapid Neocortical Learning of New Schema-Consistent Information Into Complementary Learning Systems Theory.</td>
+<td align="left">J Exp Psychol Gen</td>
+</tr>
+<tr class="even">
+<td align="left">85QV9X5F</td>
+<td align="left">journalArticle</td>
+<td align="left">1995</td>
+<td align="left">McClelland, J. L.; McNaughton, B. L.; O'Reilly, R. C.</td>
+<td align="left">Why There are Complementary Learning Systems in the Hippocampus and Neocortex: Insights from the Successes and Failures of Connectionist Models of Learning and Memory</td>
+<td align="left">Psychological Review</td>
+</tr>
+<tr class="odd">
+<td align="left">Z4X6DT6N</td>
+<td align="left">journalArticle</td>
+<td align="left">1990</td>
+<td align="left">Ratcliff, R.</td>
+<td align="left">Connectionist models of recognition memory: constraints imposed by learning and forgetting functions.</td>
+<td align="left">Psychological review</td>
+</tr>
+</tbody>
+</table>
+<p>We'd like to know:</p>
+<ul>
+<li><p>How many papers has each person contributed to?</p></li>
+<li><p>Who collaborates with whom?</p></li>
+</ul>
+<p>If we only cared about one author, we could search for her name in the spreadsheet to answer the first question, then select those rows and manually tally her co-authors to answer the second. But doing that for all of the authors one by one would take days, we'd almost certainly make mistakes, and then someone would almost certainly hand us another, larger spreadsheet and we'd have to start over.</p>
+<p>Here's what we're going to do instead:</p>
+<ol style="list-style-type: decimal">
+<li><p>Write a little Python program to print (key, author) pairs for every contributor to every paper. For example, this program will turn the first three rows of the spreadsheet into:</p>
+<pre><code>8SW85SQM McClelland, James L
+85QV9X5F McClelland, J. L.
+85QV9X5F McNaughton, B. L.
+85QV9X5F O&#39;Reilly, R. C.
+Z4X6DT6N Ratcliff, R.</code></pre></li>
+<li><p>Create an SQL database with one table called <code>authors</code> and insert each (key, author) pair into that table.</p></li>
+<li><p>Use SQL queries to answer our original questions.</p></li>
+</ol>
+<p>This might seem like a lot of work to answer two questions, but it's the right approach for several reasons:</p>
+<ul>
+<li><p>Once the data is in a database, it will be easy to ask and answer many other questions.</p></li>
+<li><p>We'll be able to re-use our tools on the next spreadsheet we're given.</p></li>
+<li><p>We'll have a record of what we did (something that clicking in a spreadsheet won't give us).</p></li>
+</ul>
+<div id="fixme" class="challenge">
+<h2>FIXME</h2>
+<p>FIXME</p>
+</div>
         </div>
       </div>
       <div class="footer">

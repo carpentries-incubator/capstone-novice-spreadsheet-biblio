@@ -27,160 +27,160 @@
         <div class="span10 offset1">
           <h1 class="title">From a Spreadsheet to a Database</h1>
           <h2 class="subtitle">Storing Data in a Database</h2>
-          <div id="learning-objectives" class="objectives">
-          <h2>Learning Objectives</h2>
-          <ul>
-          <li>FIXME</li>
-          </ul>
-          </div>
-          <p>We now have (key, author) pairs. The next step is to put them in a relational database so that we can start asking and answering questions. Our starting point is the final script from the previous topic:</p>
-          <pre class="sourceCode python"><code class="sourceCode python"><span class="co"># display-authors-2.py</span>
-          <span class="co"># Print (key, author) pairs.</span>
-          
-          <span class="ch">import</span> sys
-          <span class="ch">import</span> csv
-          
-          raw = <span class="dt">open</span>(sys.argv[<span class="dv">1</span>], <span class="st">&#39;r&#39;</span>)
-          reader = csv.reader(raw);
-          <span class="kw">for</span> line in reader:
-              key, authors = line[<span class="dv">0</span>], line[<span class="dv">3</span>]
-              <span class="kw">for</span> auth in authors.split(<span class="st">&#39;; &#39;</span>): <span class="co"># semi-colon plus space instead of semi-colon</span>
-                  <span class="dt">print</span> key, auth
-          raw.close()</code></pre>
-          <p>whose output looks like this:</p>
-          <pre class="output"><code>8SW85SQM McClelland, James L
-          85QV9X5F McClelland, J. L.
-          85QV9X5F McNaughton, B. L.
-          85QV9X5F O&#39;Reilly, R. C.
-          Z4X6DT6N Ratcliff, R.
-          F5DGU3Q4 McCloskey, M.
-          F5DGU3Q4 Cohen, N. J.
-          PNGQMCP5 Buciluǎ, Cristian
-          PNGQMCP5 Caruana, Rich
-          PNGQMCP5 Niculescu-Mizil, Alexandru</code></pre>
-          <p>What we <em>want</em> is a series of SQL <code>insert</code> statements:</p>
-          <pre class="output"><code>insert into data values(&#39;8SW85SQM&#39;, &#39;McClelland, James L&#39;);
-          insert into data values(&#39;85QV9X5F&#39;, &#39;McClelland, J. L.&#39;);
-          insert into data values(&#39;85QV9X5F&#39;, &#39;McNaughton, B. L.&#39;);</code></pre>
-          <pre class="sourceCode python"><code class="sourceCode python"><span class="co"># convert-1.py</span>
-          <span class="co"># Create SQL statements to put (key, author) pairs in a database.</span>
-          
-          <span class="ch">import</span> sys
-          <span class="ch">import</span> csv
-          
-          INSERT = <span class="st">&quot;insert into data values(&#39;</span><span class="ot">{0}</span><span class="st">&#39;, &#39;</span><span class="ot">{1}</span><span class="st">&#39;);&quot;</span>
-          
-          raw = <span class="dt">open</span>(sys.argv[<span class="dv">1</span>], <span class="st">&#39;r&#39;</span>)
-          reader = csv.reader(raw);
-          <span class="kw">for</span> line in reader:
-              key, authors = line[<span class="dv">0</span>], line[<span class="dv">3</span>]
-              <span class="kw">for</span> auth in authors.split(<span class="st">&#39;; &#39;</span>):
-                  <span class="dt">print</span> INSERT.<span class="dt">format</span>(key, auth)
-          raw.close()</code></pre>
-          <p>The first change is the definition of <code>INSERT</code>, which is the format string for our insertion statements. The second change is that instead of printing the key and author directly, we interpolate those values into <code>INSERT</code> using <code>str.format</code>.</p>
-          <p>This works, but only if by &quot;works&quot; we mean &quot;runs to completion without an obvious error&quot;. Upon closer inspection, there are two problems:</p>
-          <ol style="list-style-type: decimal">
-          <li><p>Nobody is actually creating a database table for us to insert things into.</p></li>
-          <li><p>Authors names can contain single quotes.</p></li>
-          </ol>
-          <p>The first is easy to solve --- we just add this at the start of our program:</p>
-          <pre class="sourceCode python"><code class="sourceCode python">CREATE = <span class="st">&#39;create table data(key text not null, author text not null);&#39;</span></code></pre>
-          <p>and print it out before printing any of the <code>insert</code> statements. The second problem is trickier: if we interpolate a name like &quot;O'Mear, Fiona&quot; into <code>INSERT</code>, the result will be:</p>
-          <pre class="sourceCode python"><code class="sourceCode python"><span class="co">&quot;insert into data values(&#39;RJS8QDC4&#39;, &#39;O&#39;Mear, Fiona&#39;);&quot;</span></code></pre>
-          <p>which isn't legal Python. The fix there is simply to use double quotes around our strings instead of single quotes, since people's names can't contain the former. Once we make this change, our whole program is:</p>
-          <pre class="sourceCode python"><code class="sourceCode python"><span class="co"># convert-2.py</span>
-          <span class="co"># Create database of keys and authors.</span>
-          
-          <span class="ch">import</span> sys
-          <span class="ch">import</span> csv
-          
-          CREATE = <span class="st">&#39;create table data(key text not null, author text not null);&#39;</span>
-          INSERT = <span class="st">&#39;insert into data values(&quot;</span><span class="ot">{0}</span><span class="st">&quot;, &quot;</span><span class="ot">{1}</span><span class="st">&quot;);&#39;</span>
-          
-          <span class="dt">print</span> CREATE
-          
-          raw = <span class="dt">open</span>(sys.argv[<span class="dv">1</span>], <span class="st">&#39;r&#39;</span>)
-          reader = csv.reader(raw);
-          <span class="kw">for</span> line in reader:
-              key, authors = line[<span class="dv">0</span>], line[<span class="dv">3</span>]
-              <span class="kw">for</span> auth in authors.split(<span class="st">&#39;; &#39;</span>):
-                  <span class="dt">print</span> INSERT.<span class="dt">format</span>(key, auth)
-          raw.close()</code></pre>
-          <p>Let's run it:</p>
-          <pre class="input"><code>$ python code/convert-2.py data/bibliography.csv | head -5
-          create table data(key text not null, author text not null);
-          insert into data values(&quot;8SW85SQM&quot;, &quot;McClelland, James L&quot;);
-          insert into data values(&quot;85QV9X5F&quot;, &quot;McClelland, J. L.&quot;);
-          insert into data values(&quot;85QV9X5F&quot;, &quot;McNaughton, B. L.&quot;);
-          insert into data values(&quot;85QV9X5F&quot;, &quot;O&#39;Reilly, R. C.&quot;);</code></pre>
-          <p>That looks pretty good, so let's use it to create an actual database:</p>
-          <pre class="input"><code>$ python code/convert-2.py data/bibliography.csv | sqlite3 bibliography.db</code></pre>
-          <p>This pipeline takes about four seconds to run on my laptop, and creates a 205 kbyte file called <code>bibliography.db</code>. Let's have a look at what that database contains:</p>
-          <pre class="input"><code>$ sqlite3 bibliography.db
-          SQLite version 3.8.5 2014-08-15 22:37:57
-          Enter &quot;.help&quot; for usage hints.
-          
-          sqlite&gt; .schema
-          CREATE TABLE data(key text not null, author text not null);
-          
-          sqlite&gt; select * from data limit 10;
-          8SW85SQM|McClelland, James L
-          85QV9X5F|McClelland, J. L.
-          85QV9X5F|McNaughton, B. L.
-          85QV9X5F|O&#39;Reilly, R. C.
-          Z4X6DT6N|Ratcliff, R.
-          F5DGU3Q4|McCloskey, M.
-          F5DGU3Q4|Cohen, N. J.
-          PNGQMCP5|Buciluǎ, Cristian
-          PNGQMCP5|Caruana, Rich
-          PNGQMCP5|Niculescu-Mizil, Alexandru</code></pre>
-          <p>That looks good, so let's try asking some questions:</p>
-          <pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">select</span> author, <span class="fu">count</span>(*) <span class="kw">from</span> <span class="kw">data</span> <span class="kw">group</span> <span class="kw">by</span> author <span class="kw">order</span> <span class="kw">by</span> <span class="fu">count</span>(*) <span class="kw">desc</span> <span class="kw">limit</span> <span class="dv">10</span>;</code></pre>
-          <pre class="output"><code>Bengio, Yoshua|122
-          Bengio, Y.|111
-          Hinton, Geoffrey E.|78
-          LeCun, Yann|56
-          Hinton, G. E.|45
-          Salakhutdinov, Ruslan|34
-          LeCun, Y.|31
-          Vincent, Pascal|29
-          Jordan, M. I.|27
-          Frasconi, P.|25</code></pre>
-          <p>The first thing we see is that our work has paid off: we can now find out who the most prolific authors are with a single command. The second thing we see is that we're not done yet: &quot;Bengio, Yoshua&quot; and &quot;Bengio, Y.&quot; are almost certainly the same person, as are &quot;LeCun, Yann&quot; and &quot;LeCun, Y.&quot;. If we really want to know who has written the most papers, we're going to have to reconcile different names for the same person.</p>
-          <p>But instead of doing that, let's see what other questions we can answer. Who has co-authored papers with whom?</p>
-          <pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">select</span> a.author, b.author <span class="kw">from</span> <span class="kw">data</span> a <span class="kw">join</span> <span class="kw">data</span> b <span class="kw">on</span> a.key=b.key <span class="kw">and</span> a.author &gt; b.author <span class="kw">limit</span> <span class="dv">10</span>;</code></pre>
-          <pre class="output"><code>McNaughton, B. L.|McClelland, J. L.
-          O&#39;Reilly, R. C.|McClelland, J. L.
-          O&#39;Reilly, R. C.|McNaughton, B. L.
-          McCloskey, M.|Cohen, N. J.
-          Caruana, Rich|Buciluǎ, Cristian
-          Niculescu-Mizil, Alexandru|Buciluǎ, Cristian
-          Niculescu-Mizil, Alexandru|Caruana, Rich
-          Rigamonti, Roberto|Fua, Pascal
-          Rigamonti, Roberto|Lepetit, Vincent
-          Sironi, Amos|Fua, Pascal</code></pre>
-          <p>(We use <code>a.author &gt; b.author</code> to ensure that each distinct pair of authors only shows up once.) What if we want to know how often different pairs of people have written together?</p>
-          <pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">select</span> a.author, b.author, <span class="fu">count</span>(*)
-          <span class="kw">from</span> <span class="kw">data</span> a <span class="kw">join</span> <span class="kw">data</span> b
-          <span class="kw">on</span> a.key=b.key <span class="kw">and</span> a.author &gt; b.author
-          <span class="kw">group</span> <span class="kw">by</span> a.author, b.author
-          <span class="kw">order</span> <span class="kw">by</span> <span class="fu">count</span>(*) <span class="kw">desc</span>
-          <span class="kw">limit</span> <span class="dv">10</span>;</code></pre>
-          <pre class="output"><code>Vincent, Pascal|Bengio, Yoshua|27
-          Roux, Nicolas Le|Bengio, Yoshua|20
-          Delalleau, Olivier|Bengio, Yoshua|19
-          Bengio, Y.|Bengio, S.|18
-          Larochelle, Hugo|Bengio, Yoshua|15
-          Roux, Nicolas Le|Delalleau, Olivier|15
-          Vincent, P.|Bengio, Y.|15
-          Chapados, N.|Bengio, Y.|14
-          Gori, M.|Frasconi, P.|14
-          Salakhutdinov, Ruslan|Hinton, Geoffrey E.|14</code></pre>
-          <p>Again, we have a data normalization problem: the pair &quot;Vincent, Pascal&quot; and &quot;Bengio, Yoshua&quot; is almost certainly the same as the pair &quot;Bengio, Y.&quot; and &quot;Bengio, S.&quot;. But that problem would be there even if we were analyzing this data manually, and putting it in a database has made asking new questions so easy that we can do research we otherwise wouldn't have been able to tackle. The final step is to commit our script to Git and celebrate with a nice cup of tea.</p>
-          <div id="fixme" class="challenge">
-          <h2>FIXME</h2>
-          <p>FIXME: split on semi-colon and then strip in case some entries only have semi-colons.</p>
-          </div>
+<div id="learning-objectives" class="objectives objectives">
+<h2>Learning Objectives</h2>
+<ul>
+<li>FIXME</li>
+</ul>
+</div>
+<p>We now have (key, author) pairs. The next step is to put them in a relational database so that we can start asking and answering questions. Our starting point is the final script from the previous topic:</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="co"># display-authors-2.py</span>
+<span class="co"># Print (key, author) pairs.</span>
+
+<span class="ch">import</span> sys
+<span class="ch">import</span> csv
+
+raw = <span class="dt">open</span>(sys.argv[<span class="dv">1</span>], <span class="st">&#39;r&#39;</span>)
+reader = csv.reader(raw);
+<span class="kw">for</span> line in reader:
+    key, authors = line[<span class="dv">0</span>], line[<span class="dv">3</span>]
+    <span class="kw">for</span> auth in authors.split(<span class="st">&#39;; &#39;</span>): <span class="co"># semi-colon plus space instead of semi-colon</span>
+        <span class="dt">print</span> key, auth
+raw.close()</code></pre>
+<p>whose output looks like this:</p>
+<pre class="output"><code>8SW85SQM McClelland, James L
+85QV9X5F McClelland, J. L.
+85QV9X5F McNaughton, B. L.
+85QV9X5F O&#39;Reilly, R. C.
+Z4X6DT6N Ratcliff, R.
+F5DGU3Q4 McCloskey, M.
+F5DGU3Q4 Cohen, N. J.
+PNGQMCP5 Buciluǎ, Cristian
+PNGQMCP5 Caruana, Rich
+PNGQMCP5 Niculescu-Mizil, Alexandru</code></pre>
+<p>What we <em>want</em> is a series of SQL <code>insert</code> statements:</p>
+<pre class="output"><code>insert into data values(&#39;8SW85SQM&#39;, &#39;McClelland, James L&#39;);
+insert into data values(&#39;85QV9X5F&#39;, &#39;McClelland, J. L.&#39;);
+insert into data values(&#39;85QV9X5F&#39;, &#39;McNaughton, B. L.&#39;);</code></pre>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="co"># convert-1.py</span>
+<span class="co"># Create SQL statements to put (key, author) pairs in a database.</span>
+
+<span class="ch">import</span> sys
+<span class="ch">import</span> csv
+
+INSERT = <span class="st">&quot;insert into data values(&#39;</span><span class="ot">{0}</span><span class="st">&#39;, &#39;</span><span class="ot">{1}</span><span class="st">&#39;);&quot;</span>
+
+raw = <span class="dt">open</span>(sys.argv[<span class="dv">1</span>], <span class="st">&#39;r&#39;</span>)
+reader = csv.reader(raw);
+<span class="kw">for</span> line in reader:
+    key, authors = line[<span class="dv">0</span>], line[<span class="dv">3</span>]
+    <span class="kw">for</span> auth in authors.split(<span class="st">&#39;; &#39;</span>):
+        <span class="dt">print</span> INSERT.<span class="dt">format</span>(key, auth)
+raw.close()</code></pre>
+<p>The first change is the definition of <code>INSERT</code>, which is the format string for our insertion statements. The second change is that instead of printing the key and author directly, we interpolate those values into <code>INSERT</code> using <code>str.format</code>.</p>
+<p>This works, but only if by &quot;works&quot; we mean &quot;runs to completion without an obvious error&quot;. Upon closer inspection, there are two problems:</p>
+<ol style="list-style-type: decimal">
+<li><p>Nobody is actually creating a database table for us to insert things into.</p></li>
+<li><p>Authors names can contain single quotes.</p></li>
+</ol>
+<p>The first is easy to solve --- we just add this at the start of our program:</p>
+<pre class="sourceCode python"><code class="sourceCode python">CREATE = <span class="st">&#39;create table data(key text not null, author text not null);&#39;</span></code></pre>
+<p>and print it out before printing any of the <code>insert</code> statements. The second problem is trickier: if we interpolate a name like &quot;O'Mear, Fiona&quot; into <code>INSERT</code>, the result will be:</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="co">&quot;insert into data values(&#39;RJS8QDC4&#39;, &#39;O&#39;Mear, Fiona&#39;);&quot;</span></code></pre>
+<p>which isn't legal Python. The fix there is simply to use double quotes around our strings instead of single quotes, since people's names can't contain the former. Once we make this change, our whole program is:</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="co"># convert-2.py</span>
+<span class="co"># Create database of keys and authors.</span>
+
+<span class="ch">import</span> sys
+<span class="ch">import</span> csv
+
+CREATE = <span class="st">&#39;create table data(key text not null, author text not null);&#39;</span>
+INSERT = <span class="st">&#39;insert into data values(&quot;</span><span class="ot">{0}</span><span class="st">&quot;, &quot;</span><span class="ot">{1}</span><span class="st">&quot;);&#39;</span>
+
+<span class="dt">print</span> CREATE
+
+raw = <span class="dt">open</span>(sys.argv[<span class="dv">1</span>], <span class="st">&#39;r&#39;</span>)
+reader = csv.reader(raw);
+<span class="kw">for</span> line in reader:
+    key, authors = line[<span class="dv">0</span>], line[<span class="dv">3</span>]
+    <span class="kw">for</span> auth in authors.split(<span class="st">&#39;; &#39;</span>):
+        <span class="dt">print</span> INSERT.<span class="dt">format</span>(key, auth)
+raw.close()</code></pre>
+<p>Let's run it:</p>
+<pre class="input"><code>$ python code/convert-2.py data/bibliography.csv | head -5
+create table data(key text not null, author text not null);
+insert into data values(&quot;8SW85SQM&quot;, &quot;McClelland, James L&quot;);
+insert into data values(&quot;85QV9X5F&quot;, &quot;McClelland, J. L.&quot;);
+insert into data values(&quot;85QV9X5F&quot;, &quot;McNaughton, B. L.&quot;);
+insert into data values(&quot;85QV9X5F&quot;, &quot;O&#39;Reilly, R. C.&quot;);</code></pre>
+<p>That looks pretty good, so let's use it to create an actual database:</p>
+<pre class="input"><code>$ python code/convert-2.py data/bibliography.csv | sqlite3 bibliography.db</code></pre>
+<p>This pipeline takes about four seconds to run on my laptop, and creates a 205 kbyte file called <code>bibliography.db</code>. Let's have a look at what that database contains:</p>
+<pre class="input"><code>$ sqlite3 bibliography.db
+SQLite version 3.8.5 2014-08-15 22:37:57
+Enter &quot;.help&quot; for usage hints.
+
+sqlite&gt; .schema
+CREATE TABLE data(key text not null, author text not null);
+
+sqlite&gt; select * from data limit 10;
+8SW85SQM|McClelland, James L
+85QV9X5F|McClelland, J. L.
+85QV9X5F|McNaughton, B. L.
+85QV9X5F|O&#39;Reilly, R. C.
+Z4X6DT6N|Ratcliff, R.
+F5DGU3Q4|McCloskey, M.
+F5DGU3Q4|Cohen, N. J.
+PNGQMCP5|Buciluǎ, Cristian
+PNGQMCP5|Caruana, Rich
+PNGQMCP5|Niculescu-Mizil, Alexandru</code></pre>
+<p>That looks good, so let's try asking some questions:</p>
+<pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">select</span> author, <span class="fu">count</span>(*) <span class="kw">from</span> <span class="kw">data</span> <span class="kw">group</span> <span class="kw">by</span> author <span class="kw">order</span> <span class="kw">by</span> <span class="fu">count</span>(*) <span class="kw">desc</span> <span class="kw">limit</span> <span class="dv">10</span>;</code></pre>
+<pre class="output"><code>Bengio, Yoshua|122
+Bengio, Y.|111
+Hinton, Geoffrey E.|78
+LeCun, Yann|56
+Hinton, G. E.|45
+Salakhutdinov, Ruslan|34
+LeCun, Y.|31
+Vincent, Pascal|29
+Jordan, M. I.|27
+Frasconi, P.|25</code></pre>
+<p>The first thing we see is that our work has paid off: we can now find out who the most prolific authors are with a single command. The second thing we see is that we're not done yet: &quot;Bengio, Yoshua&quot; and &quot;Bengio, Y.&quot; are almost certainly the same person, as are &quot;LeCun, Yann&quot; and &quot;LeCun, Y.&quot;. If we really want to know who has written the most papers, we're going to have to reconcile different names for the same person.</p>
+<p>But instead of doing that, let's see what other questions we can answer. Who has co-authored papers with whom?</p>
+<pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">select</span> a.author, b.author <span class="kw">from</span> <span class="kw">data</span> a <span class="kw">join</span> <span class="kw">data</span> b <span class="kw">on</span> a.key=b.key <span class="kw">and</span> a.author &gt; b.author <span class="kw">limit</span> <span class="dv">10</span>;</code></pre>
+<pre class="output"><code>McNaughton, B. L.|McClelland, J. L.
+O&#39;Reilly, R. C.|McClelland, J. L.
+O&#39;Reilly, R. C.|McNaughton, B. L.
+McCloskey, M.|Cohen, N. J.
+Caruana, Rich|Buciluǎ, Cristian
+Niculescu-Mizil, Alexandru|Buciluǎ, Cristian
+Niculescu-Mizil, Alexandru|Caruana, Rich
+Rigamonti, Roberto|Fua, Pascal
+Rigamonti, Roberto|Lepetit, Vincent
+Sironi, Amos|Fua, Pascal</code></pre>
+<p>(We use <code>a.author &gt; b.author</code> to ensure that each distinct pair of authors only shows up once.) What if we want to know how often different pairs of people have written together?</p>
+<pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">select</span> a.author, b.author, <span class="fu">count</span>(*)
+<span class="kw">from</span> <span class="kw">data</span> a <span class="kw">join</span> <span class="kw">data</span> b
+<span class="kw">on</span> a.key=b.key <span class="kw">and</span> a.author &gt; b.author
+<span class="kw">group</span> <span class="kw">by</span> a.author, b.author
+<span class="kw">order</span> <span class="kw">by</span> <span class="fu">count</span>(*) <span class="kw">desc</span>
+<span class="kw">limit</span> <span class="dv">10</span>;</code></pre>
+<pre class="output"><code>Vincent, Pascal|Bengio, Yoshua|27
+Roux, Nicolas Le|Bengio, Yoshua|20
+Delalleau, Olivier|Bengio, Yoshua|19
+Bengio, Y.|Bengio, S.|18
+Larochelle, Hugo|Bengio, Yoshua|15
+Roux, Nicolas Le|Delalleau, Olivier|15
+Vincent, P.|Bengio, Y.|15
+Chapados, N.|Bengio, Y.|14
+Gori, M.|Frasconi, P.|14
+Salakhutdinov, Ruslan|Hinton, Geoffrey E.|14</code></pre>
+<p>Again, we have a data normalization problem: the pair &quot;Vincent, Pascal&quot; and &quot;Bengio, Yoshua&quot; is almost certainly the same as the pair &quot;Bengio, Y.&quot; and &quot;Bengio, S.&quot;. But that problem would be there even if we were analyzing this data manually, and putting it in a database has made asking new questions so easy that we can do research we otherwise wouldn't have been able to tackle. The final step is to commit our script to Git and celebrate with a nice cup of tea.</p>
+<div id="fixme" class="challenge">
+<h2>FIXME</h2>
+<p>FIXME: split on semi-colon and then strip in case some entries only have semi-colons.</p>
+</div>
         </div>
       </div>
       <div class="footer">
