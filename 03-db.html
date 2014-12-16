@@ -27,10 +27,12 @@
         <div class="span10 offset1">
           <h1 class="title">From a Spreadsheet to a Database</h1>
           <h2 class="subtitle">Storing Data in a Database</h2>
-<div id="learning-objectives" class="objectives objectives">
+<div id="learning-objectives" class="objectives">
 <h2>Learning Objectives</h2>
 <ul>
-<li>FIXME</li>
+<li>Write a short Python program to create a single-table database by printing SQL statements.</li>
+<li>Explain when and why to use this approach rather than connecting to the database programmatically.</li>
+<li>Explain why inferences drawn from unnormalized data are always approximate.</li>
 </ul>
 </div>
 <p>We now have (key, author) pairs. The next step is to put them in a relational database so that we can start asking and answering questions. Our starting point is the final script from the previous topic:</p>
@@ -62,6 +64,7 @@ PNGQMCP5 Niculescu-Mizil, Alexandru</code></pre>
 <pre class="output"><code>insert into data values(&#39;8SW85SQM&#39;, &#39;McClelland, James L&#39;);
 insert into data values(&#39;85QV9X5F&#39;, &#39;McClelland, J. L.&#39;);
 insert into data values(&#39;85QV9X5F&#39;, &#39;McNaughton, B. L.&#39;);</code></pre>
+<p>so let's modify the program to print this instead:</p>
 <pre class="sourceCode python"><code class="sourceCode python"><span class="co"># convert-1.py</span>
 <span class="co"># Create SQL statements to put (key, author) pairs in a database.</span>
 
@@ -78,6 +81,10 @@ reader = csv.reader(raw);
         <span class="dt">print</span> INSERT.<span class="dt">format</span>(key, auth)
 raw.close()</code></pre>
 <p>The first change is the definition of <code>INSERT</code>, which is the format string for our insertion statements. The second change is that instead of printing the key and author directly, we interpolate those values into <code>INSERT</code> using <code>str.format</code>.</p>
+<div id="cutting-corners" class="callout">
+<h2>Cutting Corners</h2>
+<p>Python and other languages have libraries for interacting with databases, so why are we piping <code>insert</code> statements into SQLite instead? The answer is that it's a simple solution that uses all of the tools we have introduced so far. If we had to do anything more complicated with this data, we would almost certainly <code>import sqlite3</code> and do things the right way.</p>
+</div>
 <p>This works, but only if by &quot;works&quot; we mean &quot;runs to completion without an obvious error&quot;. Upon closer inspection, there are two problems:</p>
 <ol style="list-style-type: decimal">
 <li><p>Nobody is actually creating a database table for us to insert things into.</p></li>
@@ -147,7 +154,11 @@ Vincent, Pascal|29
 Jordan, M. I.|27
 Frasconi, P.|25</code></pre>
 <p>The first thing we see is that our work has paid off: we can now find out who the most prolific authors are with a single command. The second thing we see is that we're not done yet: &quot;Bengio, Yoshua&quot; and &quot;Bengio, Y.&quot; are almost certainly the same person, as are &quot;LeCun, Yann&quot; and &quot;LeCun, Y.&quot;. If we really want to know who has written the most papers, we're going to have to reconcile different names for the same person.</p>
-<p>But instead of doing that, let's see what other questions we can answer. Who has co-authored papers with whom?</p>
+<div id="denormalization-is-the-root-of-much-evil" class="callout">
+<h2>Denormalization is the Root of Much Evil</h2>
+<p>Data is <strong>normalized</strong> if it conforms to a standard and contains no redundancy. Our data is <strong>denormalized</strong> because it represents particular authors in several different ways. We can try to normalize the data using <strong>heuristics</strong> such as, &quot;If the surname matches and the initialized form of the other parts of the name match, it's the same person.&quot; Errors will always creep in, however: in our case, we have no way of knowing whether &quot;Albar, M.&quot; is Mohammd Albar or Michael Albar. Answers based on heuristically normalized data are therefore always approximations of reality. It is crucial in these cases that we record the heuristics we used and the transformations we made so that others (including our future selves) can check our work.</p>
+</div>
+<p>Instead of normalizing names, let's see what other questions we can answer. Who has co-authored papers with whom?</p>
 <pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">select</span> a.author, b.author <span class="kw">from</span> <span class="kw">data</span> a <span class="kw">join</span> <span class="kw">data</span> b <span class="kw">on</span> a.key=b.key <span class="kw">and</span> a.author &gt; b.author <span class="kw">limit</span> <span class="dv">10</span>;</code></pre>
 <pre class="output"><code>McNaughton, B. L.|McClelland, J. L.
 O&#39;Reilly, R. C.|McClelland, J. L.
@@ -177,9 +188,17 @@ Chapados, N.|Bengio, Y.|14
 Gori, M.|Frasconi, P.|14
 Salakhutdinov, Ruslan|Hinton, Geoffrey E.|14</code></pre>
 <p>Again, we have a data normalization problem: the pair &quot;Vincent, Pascal&quot; and &quot;Bengio, Yoshua&quot; is almost certainly the same as the pair &quot;Bengio, Y.&quot; and &quot;Bengio, S.&quot;. But that problem would be there even if we were analyzing this data manually, and putting it in a database has made asking new questions so easy that we can do research we otherwise wouldn't have been able to tackle. The final step is to commit our script to Git and celebrate with a nice cup of tea.</p>
-<div id="fixme" class="challenge">
-<h2>FIXME</h2>
-<p>FIXME: split on semi-colon and then strip in case some entries only have semi-colons.</p>
+<div id="doing-things-the-right-way" class="challenge">
+<h2>Doing Things the Right Way</h2>
+<p>Rewrite the Python program to use the <code>sqlite3</code> library to create the database instead of <code>print</code> statements.</p>
+</div>
+<div id="distinct-pairs" class="challenge">
+<h2>Distinct Pairs</h2>
+<p>Explain why using <code>a.author &gt; b.author</code> ensures that distinct pairs of authors only show up once.</p>
+</div>
+<div id="normalization" class="challenge">
+<h2>Normalization</h2>
+<p>Write a function that takes two authors' names as input and returns <code>True</code> if they are probably the same person and <code>False</code> if they do not. Compare your function to your neighbor's: can you find a case where the two would disagree?</p>
 </div>
         </div>
       </div>
