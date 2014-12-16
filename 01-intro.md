@@ -4,10 +4,10 @@ title: From a Spreadsheet to a Database
 subtitle: Introduction
 minutes: 2
 ---
-> ## Learning Objectives {.objectives}
+> ## Learning Objectives
 >
 > * Explain why the initial spreadsheet is hard to work with.
-> * Explain why a single-table database would be more usable.
+> * Explain the advantages of a single-table database.
 
 Our starting point is a spreadsheet called `bibliography.csv`
 with 2937 rows like this:
@@ -46,13 +46,14 @@ Here's what we're going to do instead:
     Z4X6DT6N Ratcliff, R.
     ~~~
 
-2.  Create an SQL database with one table called `authors`
-    and insert each (key, author) pair into that table.
+2.  Modify this program to create SQL `insert` statements
+    to put keys and authors into a database.
 
 3.  Use SQL queries to answer our original questions.
 
 This might seem like a lot of work to answer two questions,
-but it's the right approach for several reasons:
+but for anything more than a half-dozen rows,
+it will save us a lot of time:
 
 *   Once the data is in a database,
     it will be easy to ask and answer many other questions.
@@ -62,6 +63,32 @@ but it's the right approach for several reasons:
 *   We'll have a record of what we did
     (something that clicking in a spreadsheet won't give us).
 
-> ## FIXME {.challenge}
+*   It's more likely to be correct.
+
+> ## What Are the Odds? {.challenge}
 >
-> FIXME
+> The spreadsheet contains 2937 rows.
+> How accurate does manual transcription have to be
+> for us to have a 99% chance of getting the whole analysis right?
+> I.e., what error-per-row rate gives us a 0.99 probability
+> completing the entire task correctly?
+
+> ## Breaking Even {.challenge}
+>
+> If it takes 10 minutes to write a program to do a task
+> that only takes 5 minutes to do by hand,
+> the program is only worth writing
+> if the task has to be done more than twice.
+> Similarly,
+> if we only wanted to find out who had co-authored papers with one specific author,
+> and we were sure we would never have any other questions
+> or need to re-do the analysis,
+> manually searching the spreadsheet would probably be faster than
+> transcribing the data into a database.
+> 
+> Choose some task that you currently do by hand.
+> Estimate how long it takes you to do it each time,
+> how often you do it,
+> and how long it would take you to write a program to do the task instead.
+> How much time would programming actually save you?
+> How sure are you?

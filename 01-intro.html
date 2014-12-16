@@ -27,11 +27,11 @@
         <div class="span10 offset1">
           <h1 class="title">From a Spreadsheet to a Database</h1>
           <h2 class="subtitle">Introduction</h2>
-<div id="learning-objectives" class="objectives objectives">
+<div id="learning-objectives" class="objectives">
 <h2>Learning Objectives</h2>
 <ul>
 <li>Explain why the initial spreadsheet is hard to work with.</li>
-<li>Explain why a single-table database would be more usable.</li>
+<li>Explain the advantages of a single-table database.</li>
 </ul>
 </div>
 <p>Our starting point is a spreadsheet called <code>bibliography.csv</code> with 2937 rows like this:</p>
@@ -87,18 +87,24 @@
 85QV9X5F McNaughton, B. L.
 85QV9X5F O&#39;Reilly, R. C.
 Z4X6DT6N Ratcliff, R.</code></pre></li>
-<li><p>Create an SQL database with one table called <code>authors</code> and insert each (key, author) pair into that table.</p></li>
+<li><p>Modify this program to create SQL <code>insert</code> statements to put keys and authors into a database.</p></li>
 <li><p>Use SQL queries to answer our original questions.</p></li>
 </ol>
-<p>This might seem like a lot of work to answer two questions, but it's the right approach for several reasons:</p>
+<p>This might seem like a lot of work to answer two questions, but for anything more than a half-dozen rows, it will save us a lot of time:</p>
 <ul>
 <li><p>Once the data is in a database, it will be easy to ask and answer many other questions.</p></li>
 <li><p>We'll be able to re-use our tools on the next spreadsheet we're given.</p></li>
 <li><p>We'll have a record of what we did (something that clicking in a spreadsheet won't give us).</p></li>
+<li><p>It's more likely to be correct.</p></li>
 </ul>
-<div id="fixme" class="challenge">
-<h2>FIXME</h2>
-<p>FIXME</p>
+<div id="what-are-the-odds" class="challenge">
+<h2>What Are the Odds?</h2>
+<p>The spreadsheet contains 2937 rows. How accurate does manual transcription have to be for us to have a 99% chance of getting the whole analysis right? I.e., what error-per-row rate gives us a 0.99 probability completing the entire task correctly?</p>
+</div>
+<div id="breaking-even" class="challenge">
+<h2>Breaking Even</h2>
+<p>If it takes 10 minutes to write a program to do a task that only takes 5 minutes to do by hand, the program is only worth writing if the task has to be done more than twice. Similarly, if we only wanted to find out who had co-authored papers with one specific author, and we were sure we would never have any other questions or need to re-do the analysis, manually searching the spreadsheet would probably be faster than transcribing the data into a database.</p>
+<p>Choose some task that you currently do by hand. Estimate how long it takes you to do it each time, how often you do it, and how long it would take you to write a program to do the task instead. How much time would programming actually save you? How sure are you?</p>
 </div>
         </div>
       </div>
