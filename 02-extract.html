@@ -27,10 +27,13 @@
         <div class="span10 offset1">
           <h1 class="title">From a Spreadsheet to a Database</h1>
           <h2 class="subtitle">Extracting Data</h2>
-<div id="learning-objectives" class="objectives objectives">
+<div id="learning-objectives" class="objectives">
 <h2>Learning Objectives</h2>
 <ul>
-<li>FIXME</li>
+<li>Explain why we call <code>csv.reader</code> a &quot;wrapper&quot;.</li>
+<li>Write a short Python program to extract data from a CSV file.</li>
+<li>Explain the pitfalls of parsing data formats like CSV using string splitting.</li>
+<li>Explain why string splitting is nevertheless an acceptable approach for extracting authors' names from this data.</li>
 </ul>
 </div>
 <p>The first step is to turn the rows of the spreadsheet into (key, author) pairs. Let's start by making sure that Python can read the spreadsheet properly:</p>
@@ -153,9 +156,13 @@ Changes to be committed:
  create mode 100644 code/display-fields.py
  create mode 100644 code/read-fields.py
  create mode 100644 data/bibliography.csv</code></pre>
-<div id="fixme" class="challenge">
-<h2>FIXME</h2>
-<p>FIXME: split on semi-colon and then strip in case some entries only have semi-colons.</p>
+<div id="checking-assumptions" class="challenge">
+<h2>Checking Assumptions</h2>
+<p>You suspect that a handful of authors' names are separated only by a semi-colon rather than by a semi-colon and space. What Unix shell command or commands could you use to check for this?</p>
+</div>
+<div id="safer-splitting" class="challenge">
+<h2>Safer Splitting</h2>
+<p>Suppose you find that some authors' names are separated only by a semi-colon rather than by a semi-colon and a space. Modify the program so that it splits the author field on semi-colons, then strips unwanted spaces from individual authors' names while printing.</p>
 </div>
         </div>
       </div>

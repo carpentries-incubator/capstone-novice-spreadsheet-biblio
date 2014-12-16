@@ -4,9 +4,12 @@ title: From a Spreadsheet to a Database
 subtitle: Extracting Data
 minutes: 10
 ---
-> ## Learning Objectives {.objectives}
+> ## Learning Objectives
 >
-> * FIXME
+> * Explain why we call `csv.reader` a "wrapper".
+> * Write a short Python program to extract data from a CSV file.
+> * Explain the pitfalls of parsing data formats like CSV using string splitting.
+> * Explain why string splitting is nevertheless an acceptable approach for extracting authors' names from this data.
 
 The first step is to turn the rows of the spreadsheet into (key, author) pairs.
 Let's start by making sure that Python can read the spreadsheet properly:
@@ -234,6 +237,15 @@ $ git commit -m "Extracting (key, author) pairs from bibliography"
  create mode 100644 data/bibliography.csv
 ~~~
 
-> ## FIXME {.challenge}
+> ## Checking Assumptions {.challenge}
 >
-> FIXME: split on semi-colon and then strip in case some entries only have semi-colons.
+> You suspect that a handful of authors' names are separated only by a semi-colon
+> rather than by a semi-colon and space.
+> What Unix shell command or commands could you use to check for this?
+
+> ## Safer Splitting {.challenge}
+>
+> Suppose you find that some authors' names are separated only by a semi-colon
+> rather than by a semi-colon and a space.
+> Modify the program so that it splits the author field on semi-colons,
+> then strips unwanted spaces from individual authors' names while printing.
