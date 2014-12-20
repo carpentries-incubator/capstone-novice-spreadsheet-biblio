@@ -30,6 +30,6 @@ that would otherwise be difficult or impossible to work with.
 ## Other Resources
 
 *   [Motivation](motivation.html)
-*   [Reference Guide](reference.html)
-*   [Next Steps](discussion.html)
+*   [Reference](reference.html)
+*   [Discussion](discussion.html)
 *   [Instructor's Guide](instructors.html)
