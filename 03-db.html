@@ -156,7 +156,7 @@ Frasconi, P.|25</code></pre>
 <p>The first thing we see is that our work has paid off: we can now find out who the most prolific authors are with a single command. The second thing we see is that we're not done yet: &quot;Bengio, Yoshua&quot; and &quot;Bengio, Y.&quot; are almost certainly the same person, as are &quot;LeCun, Yann&quot; and &quot;LeCun, Y.&quot;. If we really want to know who has written the most papers, we're going to have to reconcile different names for the same person.</p>
 <div id="denormalization-is-the-root-of-much-evil" class="callout">
 <h2>Denormalization is the Root of Much Evil</h2>
-<p>Data is <strong>normalized</strong> if it conforms to a standard and contains no redundancy. Our data is <strong>denormalized</strong> because it represents particular authors in several different ways. We can try to normalize the data using <strong>heuristics</strong> such as, &quot;If the surname matches and the initialized form of the other parts of the name match, it's the same person.&quot; Errors will always creep in, however: in our case, we have no way of knowing whether &quot;Albar, M.&quot; is Mohammd Albar or Michael Albar. Answers based on heuristically normalized data are therefore always approximations of reality. It is crucial in these cases that we record the heuristics we used and the transformations we made so that others (including our future selves) can check our work.</p>
+<p>Data is <strong>normalized</strong> if it contains no redundancy. (The full definition has more conditions, but this is good enough for our purposes.) Our data is denormalized because it represents particular authors in several different ways. We can try to normalize the data using <strong>heuristics</strong> such as, &quot;If the surname matches and the initialized form of the other parts of the name match, it's the same person.&quot; Errors will always creep in, however: in our case, we have no way of knowing whether &quot;Albar, M.&quot; is Mohammd Albar or Michael Albar. Answers based on heuristically normalized data are therefore always approximations of reality. It is crucial in these cases that we record the heuristics we used and the transformations we made so that others (including our future selves) can check our work.</p>
 </div>
 <p>Instead of normalizing names, let's see what other questions we can answer. Who has co-authored papers with whom?</p>
 <pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">select</span> a.author, b.author <span class="kw">from</span> <span class="kw">data</span> a <span class="kw">join</span> <span class="kw">data</span> b <span class="kw">on</span> a.key=b.key <span class="kw">and</span> a.author &gt; b.author <span class="kw">limit</span> <span class="dv">10</span>;</code></pre>
@@ -200,13 +200,17 @@ Salakhutdinov, Ruslan|Hinton, Geoffrey E.|14</code></pre>
 <h2>Normalization</h2>
 <p>Write a function that takes two authors' names as input and returns <code>True</code> if they are probably the same person and <code>False</code> if they do not. Compare your function to your neighbor's: can you find a case where the two would disagree?</p>
 </div>
+<div id="normalization-continuted" class="challenge">
+<h2>Normalization (continuted)</h2>
+<p>Use the function you wrote in the previous challenge to normalize authors' names. Compare your output to your neighbor's: have you produced exactly the same list of author names? If not, have you produced an equivalent list?</p>
+</div>
         </div>
       </div>
       <div class="footer">
-        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Email</a>
-        <a class="label swc-blue-bg" href="http://github.com/swcarpentry">GitHub</a>
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/capstone-novice-spreadsheet-biblio">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
         <a class="label swc-blue-bg" href="LICENSE.html">License</a>
-        <a class="bugreport label swc-blue-bg" href="mailto:admin@software-carpentry.org?subject=bug%20in%20{{page.path}}">Bug Report</a>
       </div>
     </div>
     <!-- Javascript placed at the end of the document so the pages load faster -->

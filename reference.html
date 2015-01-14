@@ -27,23 +27,42 @@
         <div class="span10 offset1">
           <h1 class="title">Lesson Title</h1>
           <h2 class="subtitle">Reference</h2>
-<p>...commands and examples...</p>
+<h2 id="introduction"><a href="01-intro.html">Introduction</a></h2>
+<ul>
+<li><p>Data in a database is usually easier to query than data in a spreadsheet.</p></li>
+<li><p>Writing tools to extract and reformat data allows us to re-use our work and gives us a record of what we did.</p></li>
+<li><p>Tool-based data extraction and reformatting is more likely to be correct than manual extraction and reformatting.</p></li>
+</ul>
+<h2 id="extracting-data"><a href="02-extract.html">Extracting Data</a></h2>
+<ul>
+<li><p>Search for a library to solve a problem before writing code to solve it.</p></li>
+<li><p>Always use the <code>csv</code> library to handle CSV data.</p></li>
+<li><p>Use pipelines of command-line tools to do spot checks of data's correctness when extracting and reformatting.</p></li>
+<li><p>Put all work under version control.</p></li>
+</ul>
+<h2 id="storing-data-in-a-database"><a href="03-db.html">Storing Data in a Database</a></h2>
+<ul>
+<li><p>A program can print <code>create</code> and <code>insert</code> statements to generate a simple database instead of working with the database programmatically, but this should only be done in very simple cases.</p></li>
+<li><p>Normalized data is much easier to work with than denormalized data.</p></li>
+<li><p>Heuristically normalized data is only ever approximately correct.</p></li>
+<li><p>Record the heuristics used, how they were implemented, and what effect they had on data so that analysis can be repeated later.</p></li>
+</ul>
 <h2 id="glossary">Glossary</h2>
 <dl>
-<dt><span id="key-word-1">Key Word 1</span></dt>
-<dd>Definition of first term
+<dt><span id="normalized-data">normalized data</span></dt>
+<dd>Data that contains no redundancy, i.e., each fact is represented once and in one place.
 </dd>
-<dt><span id="key-word-2">Key Word 2</span></dt>
-<dd>Definition of second term
+<dt><span id="heuristic">heuristic</span></dt>
+<dd>A guideline for solving a problem that is usually, but not always, correct.
 </dd>
 </dl>
         </div>
       </div>
       <div class="footer">
-        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Email</a>
-        <a class="label swc-blue-bg" href="http://github.com/swcarpentry">GitHub</a>
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/capstone-novice-spreadsheet-biblio">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
         <a class="label swc-blue-bg" href="LICENSE.html">License</a>
-        <a class="bugreport label swc-blue-bg" href="mailto:admin@software-carpentry.org?subject=bug%20in%20{{page.path}}">Bug Report</a>
       </div>
     </div>
     <!-- Javascript placed at the end of the document so the pages load faster -->
