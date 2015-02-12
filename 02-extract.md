@@ -20,11 +20,12 @@ Let's start by making sure that Python can read the spreadsheet properly:
 import sys
 
 filename = sys.argv[1]
-reader = open(filename, 'r')
 count = 0
-for line in reader:
-    count += 1
-reader.close()
+
+with open(filename, 'r') as reader:
+    for line in reader:
+        count += 1
+
 print count
 ~~~
 
