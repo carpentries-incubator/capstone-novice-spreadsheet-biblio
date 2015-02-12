@@ -75,11 +75,11 @@ we come up with this:
 import sys
 import csv
 
-raw = open(sys.argv[1], 'r')
-reader = csv.reader(raw);
-for line in reader:
-    print line
-raw.close()
+with open(sys.argv[1], 'r') as raw:
+    reader = csv.reader(raw);
+    for line in reader:
+        print line
+
 ~~~
 
 This program starts by opening the bibliography file
@@ -120,11 +120,11 @@ Let's modify the program to print out just those two fields:
 import sys
 import csv
 
-raw = open(sys.argv[1], 'r')
-reader = csv.reader(raw);
-for line in reader:
-    print line[0], line[3]
-raw.close()
+with open(sys.argv[1], 'r') as raw:
+    reader = csv.reader(raw);
+    for line in reader:
+        print line[0], line[3]
+
 ~~~
 
 Its output is:
@@ -173,13 +173,13 @@ What happens if we try to split on a semi-colon plus a space?
 import sys
 import csv
 
-raw = open(sys.argv[1], 'r')
-reader = csv.reader(raw);
-for line in reader:
-    key, authors = line[0], line[3]
-    for auth in authors.split('; '): # semi-colon plus space instead of semi-colon
-        print key, auth
-raw.close()
+with open(sys.argv[1], 'r') as raw:
+    reader = csv.reader(raw);
+    for line in reader:
+        key, authors = line[0], line[3]
+        for auth in authors.split('; '): # semi-colon plus space instead of semi-colon
+            print key, auth
+
 ~~~
 ~~~ {.output}
 8SW85SQM McClelland, James L
