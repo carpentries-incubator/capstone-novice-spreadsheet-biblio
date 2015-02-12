@@ -4,10 +4,10 @@
 import sys
 import csv
 
-raw = open(sys.argv[1], 'r')
-reader = csv.reader(raw);
-for line in reader:
-    key, authors = line[0], line[3]
-    for auth in authors.split(';'):
-        print key, auth
-raw.close()
+with open(sys.argv[1], 'r') as raw:
+    reader = csv.reader(raw);
+    for line in reader:
+        key, authors = line[0], line[3]
+        for auth in authors.split(';'):
+            print key, auth
+
