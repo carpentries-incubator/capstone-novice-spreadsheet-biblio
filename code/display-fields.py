@@ -4,8 +4,8 @@
 import sys
 import csv
 
-raw = open(sys.argv[1], 'r')
-reader = csv.reader(raw);
-for line in reader:
-    print line[0], line[3]
-raw.close()
+with open(sys.argv[1], 'r') as raw:
+    reader = csv.reader(raw);
+    for line in reader:
+        print line[0], line[3]
+
