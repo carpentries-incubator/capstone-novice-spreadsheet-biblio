@@ -5,9 +5,9 @@
     <meta name="generator" content="pandoc">
     <title>Software Carpentry: From a Spreadsheet to a Database</title>
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css/bootstrap/bootstrap-responsive.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
     <link rel="stylesheet" type="text/css" href="css/swc.css" />
     <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
     <meta charset="UTF-8" />
@@ -16,25 +16,25 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
   </head>
-  <body>
-    <div class="container">
+  <body class="lesson">
+    <div class="container card">
       <div class="banner">
         <a href="http://software-carpentry.org" title="Software Carpentry">
           <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
         </a>
       </div>
-      <div class="row-fluid">
-        <div class="span10 offset1">
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
           <h1 class="title">From a Spreadsheet to a Database</h1>
           <h2 class="subtitle">Storing Data in a Database</h2>
-<div id="learning-objectives" class="objectives">
+<blockquote>
 <h2>Learning Objectives</h2>
 <ul>
 <li>Write a short Python program to create a single-table database by printing SQL statements.</li>
 <li>Explain when and why to use this approach rather than connecting to the database programmatically.</li>
 <li>Explain why inferences drawn from unnormalized data are always approximate.</li>
 </ul>
-</div>
+</blockquote>
 <p>We now have (key, author) pairs. The next step is to put them in a relational database so that we can start asking and answering questions. Our starting point is the final script from the previous topic:</p>
 <pre class="sourceCode python"><code class="sourceCode python"><span class="co"># display-authors-2.py</span>
 <span class="co"># Print (key, author) pairs.</span>
@@ -42,13 +42,12 @@
 <span class="ch">import</span> sys
 <span class="ch">import</span> csv
 
-raw = <span class="dt">open</span>(sys.argv[<span class="dv">1</span>], <span class="st">&#39;r&#39;</span>)
-reader = csv.reader(raw);
-<span class="kw">for</span> line in reader:
-    key, authors = line[<span class="dv">0</span>], line[<span class="dv">3</span>]
-    <span class="kw">for</span> auth in authors.split(<span class="st">&#39;; &#39;</span>): <span class="co"># semi-colon plus space instead of semi-colon</span>
-        <span class="dt">print</span> key, auth
-raw.close()</code></pre>
+<span class="kw">with</span> <span class="dt">open</span>(sys.argv[<span class="dv">1</span>], <span class="st">&#39;r&#39;</span>) <span class="ch">as</span> raw:
+    reader = csv.reader(raw);
+    <span class="kw">for</span> line in reader:
+        key, authors = line[<span class="dv">0</span>], line[<span class="dv">3</span>]
+        <span class="kw">for</span> auth in authors.split(<span class="st">&#39;; &#39;</span>): <span class="co"># semi-colon plus space instead of semi-colon</span>
+            <span class="dt">print</span> key, auth</code></pre>
 <p>whose output looks like this:</p>
 <pre class="output"><code>8SW85SQM McClelland, James L
 85QV9X5F McClelland, J. L.
@@ -73,17 +72,20 @@ insert into data values(&#39;85QV9X5F&#39;, &#39;McNaughton, B. L.&#39;);</code>
 
 INSERT = <span class="st">&quot;insert into data values(&#39;</span><span class="ot">{0}</span><span class="st">&#39;, &#39;</span><span class="ot">{1}</span><span class="st">&#39;);&quot;</span>
 
-raw = <span class="dt">open</span>(sys.argv[<span class="dv">1</span>], <span class="st">&#39;r&#39;</span>)
-reader = csv.reader(raw);
-<span class="kw">for</span> line in reader:
-    key, authors = line[<span class="dv">0</span>], line[<span class="dv">3</span>]
-    <span class="kw">for</span> auth in authors.split(<span class="st">&#39;; &#39;</span>):
-        <span class="dt">print</span> INSERT.<span class="dt">format</span>(key, auth)
-raw.close()</code></pre>
+<span class="kw">with</span> <span class="dt">open</span>(sys.argv[<span class="dv">1</span>], <span class="st">&#39;r&#39;</span>) <span class="ch">as</span> raw:
+    reader = csv.reader(raw);
+    <span class="kw">for</span> line in reader:
+        key, authors = line[<span class="dv">0</span>], line[<span class="dv">3</span>]
+        <span class="kw">for</span> auth in authors.split(<span class="st">&#39;; &#39;</span>):
+            <span class="dt">print</span> INSERT.<span class="dt">format</span>(key, auth)</code></pre>
 <p>The first change is the definition of <code>INSERT</code>, which is the format string for our insertion statements. The second change is that instead of printing the key and author directly, we interpolate those values into <code>INSERT</code> using <code>str.format</code>.</p>
-<div id="cutting-corners" class="callout">
-<h2>Cutting Corners</h2>
+<div id="cutting-corners" class="callout panel panel-info">
+<div class="panel-heading">
+<h2><span class="glyphicon glyphicon-pushpin"></span>Cutting Corners</h2>
+</div>
+<div class="panel-body">
 <p>Python and other languages have libraries for interacting with databases, so why are we piping <code>insert</code> statements into SQLite instead? The answer is that it's a simple solution that uses all of the tools we have introduced so far. If we had to do anything more complicated with this data, we would almost certainly <code>import sqlite3</code> and do things the right way.</p>
+</div>
 </div>
 <p>This works, but only if by &quot;works&quot; we mean &quot;runs to completion without an obvious error&quot;. Upon closer inspection, there are two problems:</p>
 <ol style="list-style-type: decimal">
@@ -106,13 +108,12 @@ INSERT = <span class="st">&#39;insert into data values(&quot;</span><span class=
 
 <span class="dt">print</span> CREATE
 
-raw = <span class="dt">open</span>(sys.argv[<span class="dv">1</span>], <span class="st">&#39;r&#39;</span>)
-reader = csv.reader(raw);
-<span class="kw">for</span> line in reader:
-    key, authors = line[<span class="dv">0</span>], line[<span class="dv">3</span>]
-    <span class="kw">for</span> auth in authors.split(<span class="st">&#39;; &#39;</span>):
-        <span class="dt">print</span> INSERT.<span class="dt">format</span>(key, auth)
-raw.close()</code></pre>
+<span class="kw">with</span> <span class="dt">open</span>(sys.argv[<span class="dv">1</span>], <span class="st">&#39;r&#39;</span>) <span class="ch">as</span> raw:
+    reader = csv.reader(raw);
+    <span class="kw">for</span> line in reader:
+        key, authors = line[<span class="dv">0</span>], line[<span class="dv">3</span>]
+        <span class="kw">for</span> auth in authors.split(<span class="st">&#39;; &#39;</span>):
+            <span class="dt">print</span> INSERT.<span class="dt">format</span>(key, auth)</code></pre>
 <p>Let's run it:</p>
 <pre class="input"><code>$ python code/convert-2.py data/bibliography.csv | head -5
 create table data(key text not null, author text not null);
@@ -154,9 +155,13 @@ Vincent, Pascal|29
 Jordan, M. I.|27
 Frasconi, P.|25</code></pre>
 <p>The first thing we see is that our work has paid off: we can now find out who the most prolific authors are with a single command. The second thing we see is that we're not done yet: &quot;Bengio, Yoshua&quot; and &quot;Bengio, Y.&quot; are almost certainly the same person, as are &quot;LeCun, Yann&quot; and &quot;LeCun, Y.&quot;. If we really want to know who has written the most papers, we're going to have to reconcile different names for the same person.</p>
-<div id="denormalization-is-the-root-of-much-evil" class="callout">
-<h2>Denormalization is the Root of Much Evil</h2>
+<div id="denormalization-is-the-root-of-much-evil" class="callout panel panel-info">
+<div class="panel-heading">
+<h2><span class="glyphicon glyphicon-pushpin"></span>Denormalization is the Root of Much Evil</h2>
+</div>
+<div class="panel-body">
 <p>Data is <strong>normalized</strong> if it contains no redundancy. (The full definition has more conditions, but this is good enough for our purposes.) Our data is denormalized because it represents particular authors in several different ways. We can try to normalize the data using <strong>heuristics</strong> such as, &quot;If the surname matches and the initialized form of the other parts of the name match, it's the same person.&quot; Errors will always creep in, however: in our case, we have no way of knowing whether &quot;Albar, M.&quot; is Mohammd Albar or Michael Albar. Answers based on heuristically normalized data are therefore always approximations of reality. It is crucial in these cases that we record the heuristics we used and the transformations we made so that others (including our future selves) can check our work.</p>
+</div>
 </div>
 <p>Instead of normalizing names, let's see what other questions we can answer. Who has co-authored papers with whom?</p>
 <pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">select</span> a.author, b.author <span class="kw">from</span> <span class="kw">data</span> a <span class="kw">join</span> <span class="kw">data</span> b <span class="kw">on</span> a.key=b.key <span class="kw">and</span> a.author &gt; b.author <span class="kw">limit</span> <span class="dv">10</span>;</code></pre>
@@ -188,21 +193,37 @@ Chapados, N.|Bengio, Y.|14
 Gori, M.|Frasconi, P.|14
 Salakhutdinov, Ruslan|Hinton, Geoffrey E.|14</code></pre>
 <p>Again, we have a data normalization problem: the pair &quot;Vincent, Pascal&quot; and &quot;Bengio, Yoshua&quot; is almost certainly the same as the pair &quot;Bengio, Y.&quot; and &quot;Bengio, S.&quot;. But that problem would be there even if we were analyzing this data manually, and putting it in a database has made asking new questions so easy that we can do research we otherwise wouldn't have been able to tackle. The final step is to commit our script to Git and celebrate with a nice cup of tea.</p>
-<div id="doing-things-the-right-way" class="challenge">
-<h2>Doing Things the Right Way</h2>
+<div id="doing-things-the-right-way" class="challenge panel panel-success">
+<div class="panel-heading">
+<h2><span class="glyphicon glyphicon-pencil"></span>Doing Things the Right Way</h2>
+</div>
+<div class="panel-body">
 <p>Rewrite the Python program to use the <code>sqlite3</code> library to create the database instead of <code>print</code> statements.</p>
 </div>
-<div id="distinct-pairs" class="challenge">
-<h2>Distinct Pairs</h2>
+</div>
+<div id="distinct-pairs" class="challenge panel panel-success">
+<div class="panel-heading">
+<h2><span class="glyphicon glyphicon-pencil"></span>Distinct Pairs</h2>
+</div>
+<div class="panel-body">
 <p>Explain why using <code>a.author &gt; b.author</code> ensures that distinct pairs of authors only show up once.</p>
 </div>
-<div id="normalization" class="challenge">
-<h2>Normalization</h2>
+</div>
+<div id="normalization" class="challenge panel panel-success">
+<div class="panel-heading">
+<h2><span class="glyphicon glyphicon-pencil"></span>Normalization</h2>
+</div>
+<div class="panel-body">
 <p>Write a function that takes two authors' names as input and returns <code>True</code> if they are probably the same person and <code>False</code> if they do not. Compare your function to your neighbor's: can you find a case where the two would disagree?</p>
 </div>
-<div id="normalization-continuted" class="challenge">
-<h2>Normalization (continuted)</h2>
+</div>
+<div id="normalization-continuted" class="challenge panel panel-success">
+<div class="panel-heading">
+<h2><span class="glyphicon glyphicon-pencil"></span>Normalization (continuted)</h2>
+</div>
+<div class="panel-body">
 <p>Use the function you wrote in the previous challenge to normalize authors' names. Compare your output to your neighbor's: have you produced exactly the same list of author names? If not, have you produced an equivalent list?</p>
+</div>
 </div>
         </div>
       </div>
@@ -215,6 +236,6 @@ Salakhutdinov, Ruslan|Hinton, Geoffrey E.|14</code></pre>
     </div>
     <!-- Javascript placed at the end of the document so the pages load faster -->
     <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
-    <script src="http://software-carpentry.org/v5/js/bootstrap/bootstrap.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
   </body>
 </html>
