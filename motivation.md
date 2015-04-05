@@ -1,6 +1,7 @@
 ---
 layout: slides
-title: Why Topic?
+title: From a Spreadsheet to a Database
+subtitle: Motivation
 ---
 <section class="slide">
 ## Why Topic?

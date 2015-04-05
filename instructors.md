@@ -5,34 +5,20 @@ subtitle: Instructor's Guide
 ---
 ## Legend
 
-One or more paragraphs laying out the lesson's legend (i.e., the story
-behind its running example).
+FIXME
 
 ## Overall
 
 *   FIXME
 
-*   FIXME
+## [Introduction](01-intro.html)
 
-## [Topic Title One](01-one.html)
+FIXME
 
-* Point
+## [Extracting Data](02-extract.html)
 
-* Point
+FIXME
 
-* Be sure to describe what learners are expected to do during the
-  topic (watch, type along, pair program, etc.)
+## [Storing Data in a Database](03-db.html)
 
-1.  Discussion of first challenge.
-
-2.  Discussion of second challenge.
-
-## [Topic Title Two](02-two.html)
-
-* Point
-
-* Point
-
-1.  Discussion of first challenge.
-
-2.  Discussion of second challenge.
+FIXME
