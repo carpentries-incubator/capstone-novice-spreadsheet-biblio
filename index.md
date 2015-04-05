@@ -12,7 +12,7 @@ we will use all of the tools introduced so far
 to extract, reformat, and analyze information
 that would otherwise be difficult or impossible to work with.
 
-> ## Prerequisites
+> ## Prerequisites {.prereq}
 >
 > Learners should have completed introductory lessons on:
 >

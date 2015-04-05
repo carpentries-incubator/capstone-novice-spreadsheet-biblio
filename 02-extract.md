@@ -4,7 +4,7 @@ title: From a Spreadsheet to a Database
 subtitle: Extracting Data
 minutes: 10
 ---
-> ## Learning Objectives
+> ## Learning Objectives {.objectives}
 >
 > * Explain why we call `csv.reader` a "wrapper".
 > * Write a short Python program to extract data from a CSV file.

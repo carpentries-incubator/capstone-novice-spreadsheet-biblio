@@ -4,7 +4,7 @@ title: From a Spreadsheet to a Database
 subtitle: Introduction
 minutes: 2
 ---
-> ## Learning Objectives
+> ## Learning Objectives {.objectives}
 >
 > * Explain why the initial spreadsheet is hard to work with.
 > * Explain the advantages of a single-table database.
