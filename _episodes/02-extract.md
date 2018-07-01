@@ -282,3 +282,6 @@ $ git commit -m "Extracting (key, author) pairs from bibliography"
 > Modify the program so that it splits the author field on semi-colons,
 > then strips unwanted spaces from individual authors' names while printing.
 {: .challenge}
+
+{% include links.md %}
+
