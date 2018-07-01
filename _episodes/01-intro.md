@@ -37,7 +37,7 @@ In this session we will be working with a number of different datasets:
 * The [scraped list of australian politicians]({{page.root}}/data/20180628-austmpdata.csv) from the [Library Carpentry Webscraping session](https://resbazsql.github.io/lc-webscraping/). {% comment %}FIXME change the url to the proper lc site after lesson tested and pushed to the carpentries {%endcomment%}
 * [Excerpted Data]({{page.root}}/data/2016Census_G01_AUS_SA1.csv) from the [2016 Australian Census](https://datapacks.censusdata.abs.gov.au/datapacks/)
 * [Geographic Electoral Division data]({{page.root}}/data/CED_2017_AUST.csv) from the [Australian Bureau of Statistics](http://www.abs.gov.au/ausstats/abs@.nsf/Lookup/by%20Subject/1270.0.55.003~July%202016~Main%20Features~Commonwealth%20Electoral%20Divisions%20(CED)~12)
-* And [scraped bibliographic data]({{page.root}}/data/bibliography.csv) using a lightweight [webscraper for Google scholar](https://github.com/ckreibich/scholar.py)
+* And [bibliographic data from Share.osf.io](https://share.osf.io/discover?sources[]=SocArXiv) using its transformed ATOM feed of all SocArXiv papers into a [csv]({{page.root}}/data/bibliography.csv).
 
 Right now, however, we need to load data directly into a database. Download [this zip file]({{page.root}}/data/mpTwitterAndBiblio.zip) of all the data we will be using in this course.
 
