@@ -47,7 +47,7 @@ Right now, however, we need to load data directly into a database. Download [thi
 
 > ## Direct database csv loading
 >
-> CSV, comma separated values, or "flat-file" files are one of the preferred means of exhanging data produced from spreasheets and databases. When the data is produced directly from a computer, for a computer's consumption, it is very easy to load. However, this process is fragile and when we are dealing with "denormalized" data, we will have to perform cleaning steps before the data is ready for use.
+> CSV, comma separated values, or "flat-file" files are one of the preferred means of exchanging data produced from spreadsheets and databases. When the data is produced directly from a computer, for a computer's consumption, it is very easy to load. However, this process is fragile and when we are dealing with "denormalized" data, we will have to perform cleaning steps before the data is ready for use.
 {: .callout}
 
 While we can enter queries directly into our database, this approach does not scale well when we need to make tweaks to complex queries or we need to write a series of queries to get the data we want. Therefore, we want to make our scripts in a text editor.
@@ -325,7 +325,7 @@ sqlite> SELECT * from austmp where twitter is null limit 5;
 sqlite> SELECT * from austmp where twitter = '' limit 5;
 ~~~
 
-We should expect to see the various members of parliment who don't have recorded Twitter handles to show up in the first query. Unfortunately, they show up in the second. Since `''` counts as a value, we can't run aggregate statistics on it, and so must clean it up.
+We should expect to see the various members of parliament who don't have recorded Twitter handles to show up in the first query. Unfortunately, they show up in the second. Since `''` counts as a value, we can't run aggregate statistics on it, and so must clean it up.
 
 Let us add to our `austmp.sql` file. Those last two commands are to return the SQLite interface into something slightly nicer to work with when we are interrogating the data. 
 
@@ -486,7 +486,7 @@ LIMIT 2;
 ~~~
 {: .source .language-sql}
 
-And now, instead of focusing on the MP, we need to aggreate on the party:
+And now, instead of focusing on the MP, we need to aggregate on the party:
 
 ~~~
 SELECT party, sum(Tot_P_P)
