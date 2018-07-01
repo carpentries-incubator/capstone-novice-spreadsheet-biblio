@@ -3,19 +3,15 @@ title: "Loading data directly into the database"
 teaching: 45
 exercises: 15
 questions:
-- "How do we quickly explore data from multiple spreadsheets"
-- "Is direct loading of data into a database from random CSVs wise?"
-- "What is the ETL process?"
+- "What is the difference between a spreadsheet and a table?"
 objectives:
-- "Explore the difficulties of working with someone else's spreadsheet."
-- "Explore the advantages of a quickly made database to answer research questions."
+- "Explore data from different locations using a single database"
+- "Learn how to use a VIEW to save a query"
 keypoints:
-- "Spreadsheets are inflexible and can present challenges when needing to answer novel questions."
-- "It is easier to load data into a database than one might think."
-- "Dirty data is evil"
+- "A VIEW can be used to create saved queries which can be used like tables."
+- "We can quickly load multiple CSVs into the same database."
+- "CSVs can be linked if we can find the right key."
 ---
-
-# What's the point?
 
 Almost everything we can do in a database can be done with sufficiently complex spreadsheets. However, when operating on clean(ish) data, spreadsheets allow us to transform large amounts of data in consistent and reliable ways without needing to *see* the data we are manipulating. 
 
@@ -512,7 +508,11 @@ The Nationals      1039694
 ~~~
 {: .output}
 
-> ## Discussion and exercise: What other questions can we ask this data?
+> ## Discussion
+>
+> How long would it have taken to do what we just did using spreadsheets? Would that data be usable for any other question after the fact?
+
+> ## Group exercise: What other questions can we ask this data?
 > 
 > As this is live research data, what other questions can we ask it? Let us, as a class, write some queries on the etherpad to explore this novel dataset. 
 {: .discussion}
