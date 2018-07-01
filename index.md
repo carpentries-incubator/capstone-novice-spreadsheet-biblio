@@ -1,9 +1,9 @@
 ---
 layout: lesson
-root: .  # Is the only page that don't follow the partner /:path/index.html
-permalink: index.html  # Is the only page that don't follow the partner /:path/index.html
-title: "From a Spreadsheet to a Database"
+root: "."  # Is the only page that don't follow the partner /:path/index.html
+permalink: "index.html"  # Is the only page that don't follow the partner /:path/index.html
 ---
+
 Bahlai's Law says,
 ~~~
 "Other people's data is always inconsistent and in the wrong format."
