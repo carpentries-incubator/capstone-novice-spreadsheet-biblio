@@ -9,14 +9,13 @@ title: Setup
 >
 > Learners should have completed introductory lessons on:
 >
-> *   the Unix shell (head and tail, word count, sorting, and pipes)
-> *   Git (setting up a repository, committing files)
-> *   Python (libraries, loops, list indexing, string formatting)
-> *   SQL (creating tables, inserting data, joins)
+> * [The Unix Shell](http://swcarpentry.github.io/shell-novice/)
+> * [Programming with Python](http://swcarpentry.github.io/python-novice-inflammation/)
+> * [SQL](http://swcarpentry.github.iosql-novice-survey/) (creating tables, inserting data, aggregation, joins)
 {: .prereq}
 
 # Software
-For this course you will need the UNIX shell, plus [SQLite3](http://www.sqlite.org/).
+For this course you will need the UNIX shell, plus [SQLite3](http://www.sqlite.org/) on the command line.
 
 If you are running Linux, you may already have SQLite3 installed, otherwise you
 should be able to get it from your package manager (on Debian/Ubuntu, you can
@@ -31,15 +30,7 @@ The second part of the lesson requires the Python programming language (Version 
 Please refer to [the Software Carpentry setup instructions](http://swcarpentry.github.io/workshop-template/#setup) for
 *the Bash shell* and *Python* if you need guidance.
 
-> ## Prerequisites
-> This part of the lesson requires some prior knowledge of Python and how to use a shell.
-> If you need help getting started on those topics, we suggest going through the following
-> lessons first (during a workshop or on your own):
->
-> * [The Unix Shell](http://swcarpentry.github.io/shell-novice/)
-> * [Programming with Python](http://swcarpentry.github.io/python-novice-inflammation/)
->
-{: .prereq}
+
 
 
 {% include links.md %}
