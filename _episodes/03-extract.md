@@ -3,7 +3,8 @@ title: "Extracting Data"
 teaching: 20
 exercises: 10
 questions:
-- "When is it appropriate to use Python to extract and transform data before loading it into a database?"
+- "What do we do with data we cannot quickly bulk load into a database?"
+- "How does python read csvs?"
 objectives:
 - "Explain Why do we call csv.reader a wrapper?"
 - "Write a short Python program to extract data from a CSV file."
