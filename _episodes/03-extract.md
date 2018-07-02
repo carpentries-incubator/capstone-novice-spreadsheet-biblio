@@ -149,7 +149,7 @@ we just print out each line after it has been processed by the CSV reader.
 Its first few lines of output are:
 
 ~~~ 
-$ python code/read-fields.py bibliography_data/bibliography.csv | head -5
+$ python read-fields.py bibliography_data/bibliography.csv | head -5
 ~~~
 {: .language-bash}
 
@@ -222,7 +222,7 @@ with open(sys.argv[1], 'r') as raw:
 
 
 ~~~ 
-$ python code/display-authors-1.py bibliography_data/bibliography.csv | head -10
+$ python display-authors-1.py bibliography_data/bibliography.csv | head -10
 ~~~
 {: .language-bash}
 
@@ -306,11 +306,11 @@ Initial commit
 Changes to be committed:
   (use "git rm --cached <file>..." to unstage)
 
-  new file:   code/count-lines.py
-  new file:   code/display-authors-1.py
-  new file:   code/display-authors-2.py
-  new file:   code/display-fields.py
-  new file:   code/read-fields.py
+  new file:   count-lines.py
+  new file:   display-authors-1.py
+  new file:   display-authors-2.py
+  new file:   display-fields.py
+  new file:   read-fields.py
   new file:   bibliography_data/bibliography.csv
 ~~~
 {: .output}
@@ -323,11 +323,11 @@ $ git commit -m "Extracting (key, author) pairs from bibliography"
 ~~~ 
 [master (root-commit) 9db78ed] Extracting (key, author) pairsfrom bibliography
  6 files changed, 2996 insertions(+)
- create mode 100644 code/count-lines.py
- create mode 100644 code/display-authors-1.py
- create mode 100644 code/display-authors-2.py
- create mode 100644 code/display-fields.py
- create mode 100644 code/read-fields.py
+ create mode 100644 count-lines.py
+ create mode 100644 display-authors-1.py
+ create mode 100644 display-authors-2.py
+ create mode 100644 display-fields.py
+ create mode 100644 read-fields.py
  create mode 100644 bibliography_data/bibliography.csv
 ~~~
 {: .output}
