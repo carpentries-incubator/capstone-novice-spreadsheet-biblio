@@ -1,5 +1,5 @@
 ---
-title: "Combining data sets"
+title: "Combining datasets"
 teaching: 30
 exercises: 10
 questions:

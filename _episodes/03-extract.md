@@ -42,7 +42,7 @@ but for anything more than a half-dozen rows,
 it will save us a lot of time:
 
 *   Once the data is in a database,
-    it will be easy to ask and answer many other questions.
+    it will be easy to ask and answer other questions.
 *   We'll be able to re-use our tools on the next spreadsheet we're given.
 *   We'll have a record of what we did
     (something that clicking in a spreadsheet won't give us).
@@ -199,7 +199,7 @@ PNGQMCP5 Buciluǎ, Cristian; Caruana, Rich; Niculescu-Mizil, Alexandru
 The last step is to turn lines with multiple authors into multiple lines,
 each with a single author.
 This is the right time to use `str.split`:
-the authors' names are separated by semi-colons,
+the authors' names are separated by semicolons,
 so we can break each list of authors on those
 and use another loop to print the results one by one.
 
@@ -241,10 +241,10 @@ PNGQMCP5  Niculescu-Mizil, Alexandru
 {: .output}
 
 That's close to what we want, but not quite right:
-since authors' names are actually separated by a semi-colon and a space,
-and we're only splitting on semi-colons,
+since authors' names are actually separated by a semicolon and a space,
+and we're only splitting on semicolons,
 the second and subsequent name on each line comes out with an unwanted space at the front.
-What happens if we try to split on a semi-colon plus a space?
+What happens if we try to split on a semicolon plus a space?
 
 ~~~ 
 # display-authors-1.py
@@ -257,7 +257,7 @@ with open(sys.argv[1], 'r') as raw:
     reader = csv.reader(raw);
     for line in reader:
         key, authors = line[0], line[3]
-        for auth in authors.split('; '): # semi-colon plus space instead of semi-colon
+        for auth in authors.split('; '): # semicolon plus space instead of semicolon
             print(key, auth)
 
 ~~~
@@ -334,16 +334,16 @@ $ git commit -m "Extracting (key, author) pairs from bibliography"
 
 > ## Checking Assumptions 
 >
-> You suspect that a handful of authors' names are separated only by a semi-colon
-> rather than by a semi-colon and space.
+> You suspect that a handful of authors' names are separated only by a semicolon
+> rather than by a semicolon and space.
 > What Unix shell command or commands could you use to check for this?
 {: .challenge}
 
 > ## Safer Splitting 
 >
-> Suppose you find that some authors' names are separated only by a semi-colon
-> rather than by a semi-colon and a space.
-> Modify the program so that it splits the author field on semi-colons,
+> Suppose you find that some authors' names are separated only by a semicolon
+> rather than by a semicolon and a space.
+> Modify the program so that it splits the author field on semicolons,
 > then strips unwanted spaces from individual authors' names while printing.
 {: .challenge}
 

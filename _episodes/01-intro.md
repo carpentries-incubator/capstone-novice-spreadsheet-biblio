@@ -41,8 +41,8 @@ How can we turn this question into something we can answer?
 
 We start with the question: "What can we measure?"
 
-* We know politicans who are on twitter from the list of Australian members of parliment.
-* We know what party those politics are from from the same list.
+* We know politicans who are on twitter from the list of Australian members of parliament.
+* We know what party those politics are from, from the same list.
 * We know that the 2016 census has demographic population per "Statistical Area"
 * We know that the ABS publishes a dataset which names the regions alongside their statistical identifiers. 
 
@@ -54,7 +54,7 @@ We now need to inspect the data files to see if these measurable things are pres
 
 In this chapter we will be working with a number of different datasets:
 
-* The [scraped list of australian politicians]({{page.root}}/data/20180628-austmpdata.csv) from the [Library Carpentry Webscraping session](https://resbazsql.github.io/lc-webscraping/). {% comment %}FIXME change the url to the proper lc site after lesson tested and pushed to the carpentries {%endcomment%}
+* The [scraped list of Australian politicians]({{page.root}}/data/20180628-austmpdata.csv) from the [Library Carpentry Webscraping session](https://resbazsql.github.io/lc-webscraping/). {% comment %}FIXME change the url to the proper lc site after lesson tested and pushed to the carpentries {%endcomment%}
 * [Excerpted Data]({{page.root}}/data/2016Census_G01_AUS_SA1.csv) from the [2016 Australian Census](https://datapacks.censusdata.abs.gov.au/datapacks/)
 * [Geographic Electoral Division data]({{page.root}}/data/CED_2017_AUST.csv) from the [Australian Bureau of Statistics](http://www.abs.gov.au/ausstats/abs@.nsf/Lookup/by%20Subject/1270.0.55.003~July%202016~Main%20Features~Commonwealth%20Electoral%20Divisions%20(CED)~12)
 
@@ -236,7 +236,7 @@ Make a file called `aust_mp.sql`
 .mode column
 .header on
 
--- normally we'd want to select * here. But considering how many columns our dataset outputs, it makes for really awful output. Instad, we'll take the columns we care about instead. 
+-- normally we'd want to select * here. But considering how many columns our dataset outputs, it makes for really awful output. Instead, we'll take the columns we care about instead. 
 
 SELECT SA1_7DIGITCODE_2016, Tot_P_M, Tot_P_F, Tot_P_P     
   FROM census 
