@@ -19,6 +19,21 @@ keypoints:
 
 When our data complexity is higher than what can be accomplished by `.import`, we need to perform what is called an "Extract, Transform, and Load." 
 
+We'd like to know:
+
+*   How many papers has each person contributed to?
+*   Who collaborates with whom?
+
+Unfortunately, we can't use `.import` to load this bibliography into our database, because one of the fields is a dreaded and evil "multi-valued field." (Hint: this is a bad thing for any sort of data analysis.)
+
+
+If we only cared about one author,
+we could search for her name in the spreadsheet to answer the first question,
+then select those rows and manually tally her co-authors to answer the second.
+But doing that for all of the authors one by one would take days,
+we'd almost certainly make mistakes,
+and then someone would almost certainly hand us another, larger spreadsheet
+and we'd have to start over.
 
 
 This might seem like a lot of work to answer two questions,
@@ -32,20 +47,7 @@ it will save us a lot of time:
     (something that clicking in a spreadsheet won't give us).
 *   It's more likely to be correct.
 
-We'd like to know:
-
-*   How many papers has each person contributed to?
-*   Who collaborates with whom?
-
-If we only cared about one author,
-we could search for her name in the spreadsheet to answer the first question,
-then select those rows and manually tally her co-authors to answer the second.
-But doing that for all of the authors one by one would take days,
-we'd almost certainly make mistakes,
-and then someone would almost certainly hand us another, larger spreadsheet
-and we'd have to start over.
-
-
+## Exploring the data
 
 Our starting point is a spreadsheet called `bibliography.csv`
 with 2937 rows like this:
