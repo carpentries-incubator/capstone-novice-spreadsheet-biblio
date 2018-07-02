@@ -6,18 +6,18 @@ questions:
 - "What is the difference between a spreadsheet and a table?"
 objectives:
 - "Explore data from different locations using a single database"
-- "Learn how to use a VIEW to save a query"
+- "Learn how to use a `VIEW` to save a query"
 keypoints:
-- "A VIEW can be used to create saved queries which can be used like tables."
+- "A `VIEW` can be used to create saved queries which can be used like tables."
 - "We can quickly load multiple CSVs into the same database."
-- "CSVs can be linked if we can find the right key."
+- "csvs can be linked if we can find the right key."
 ---
 
-Almost everything we can do in a database can be done with sufficiently complex spreadsheets. However, when operating on clean(ish) data, spreadsheets allow us to transform large amounts of data in consistent and reliable ways without needing to *see* the data we are manipulating. 
+Almost everything we can do in a database can be done with sufficiently complex spreadsheets. However, when operating on clean(ish) data, databases allow us to transform large amounts of data in consistent and reliable ways without needing to *see* the data we are manipulating. 
 
 None of the examples we are covering today is so large that it would cause a modern spreadsheet program to crash. With that said, the 57,254 rows in `2016Census_G01_AUS_SA1.csv` are balky and difficult to work with when we are scrolling around, creating named ranges, and working on multiple layers of comparison. 
 
-The single main benefit of SQL over a spreadsheet that we are covering today is the idea of a `JOIN.` Spreadsheets can certainly perform join-like operations, but the steps are many, specific to each join, and are not reusable. Whereas with SQL, since every output of a query is itself a table which can be used to input into other queries, we not only can JOIN multiple sets of data together, but we can do it with a single line of code. 
+The single main benefit of SQL over a spreadsheet that we are covering today is the idea of a `JOIN`. Spreadsheets can certainly perform join-like operations, but the steps are many, specific to each join, and are not reusable. Whereas with SQL, since every output of a query is itself a table which can be used to input into other queries, we not only can `JOIN` multiple sets of data together, but we can do it with a single line of code. 
 
 The main drawbacks of SQL over a spreadsheet is that you have to *write* that code and that you have to have clean data. (Cue Monty Python Spanish Inquisition sketch here.) However, because each query can produce output used in subsequent queries, we don't have to deal with that complexity all at the same time. Instead, we can gradually creep up on our desired output, making sure of our footing at each step.
 
@@ -29,24 +29,38 @@ We will end this first chapter by joining data from different data sources to an
 >By [Petra Janouchová](https://twitter.com/pettulda/status/1012270311927001088)
 {: .testimonial}
 
+## Research Question Operationalisation
 
-# Let's Play with some data.
+How can we turn this question into something we can answer? 
 
-In this session we will be working with a number of different datasets:
+
+> In research design, especially in psychology, social sciences, life sciences, and physics, operationalization is a process of defining the measurement of a phenomenon that is not directly measurable, though its existence is indicated by other phenomena.
+> 
+> [Wikipedia](https://en.wikipedia.org/wiki/Operationalization)
+{: .quotation}
+
+
+We start with the question: "What can we measure?"
+
+* We know politicans who are on twitter from the list of Australian members of parliment.
+* We know what party those politics are from from the same list.
+* We know that the 2016 census has demographic population per "Statistical Area"
+* We know that the ABS publishes a dataset which names the regions alongside their statistical identifiers. 
+
+We can therefore ask something like: For members of parliment on twitter, what is the sum total of people in their district, grouped by party?
+
+Granted, this question is entirely contrived, but hopefully plausible in the ability of linking datasets.
+
+We now need to inspect the data files to see if these measurable things are present. 
+
+In this chapter we will be working with a number of different datasets:
 
 * The [scraped list of australian politicians]({{page.root}}/data/20180628-austmpdata.csv) from the [Library Carpentry Webscraping session](https://resbazsql.github.io/lc-webscraping/). {% comment %}FIXME change the url to the proper lc site after lesson tested and pushed to the carpentries {%endcomment%}
 * [Excerpted Data]({{page.root}}/data/2016Census_G01_AUS_SA1.csv) from the [2016 Australian Census](https://datapacks.censusdata.abs.gov.au/datapacks/)
 * [Geographic Electoral Division data]({{page.root}}/data/CED_2017_AUST.csv) from the [Australian Bureau of Statistics](http://www.abs.gov.au/ausstats/abs@.nsf/Lookup/by%20Subject/1270.0.55.003~July%202016~Main%20Features~Commonwealth%20Electoral%20Divisions%20(CED)~12)
-* And [bibliographic data from Share.osf.io](https://share.osf.io/discover?sources[]=SocArXiv) using its transformed ATOM feed of all SocArXiv papers into a [csv]({{page.root}}/data/bibliography.csv).
 
-Right now, however, we need to load data directly into a database. Download [this zip file]({{page.root}}/data/mpTwitterAndBiblio.zip) of all the data we will be using in this course.
+Download [this zip file]({{page.root}}/data/mpTwitterAndBiblio.zip) of all the data we will be using in this course.
 
-> ## Direct database csv loading
->
-> CSV, comma separated values, or "flat-file" files are one of the preferred means of exchanging data produced from spreadsheets and databases. When the data is produced directly from a computer, for a computer's consumption, it is very easy to load. However, this process is fragile and when we are dealing with "denormalized" data, we will have to perform cleaning steps before the data is ready for use.
-{: .callout}
-
-While we can enter queries directly into our database, this approach does not scale well when we need to make tweaks to complex queries or we need to write a series of queries to get the data we want. Therefore, we want to make our scripts in a text editor.
 
 Extract the zip file above. It should have the following structure:
 
@@ -64,7 +78,49 @@ bibliography.csv
 ~~~
 {: .output }
 
-While we are going to turn all of these commands into a script later, let us start by exploring the sqlite3 interface.
+If we characterise the 3 csv files in `aust_mp_twitter_data/` using 
+~~~
+$ head -2 aust_mp_twitter_data/*.csv
+~~~
+{: .source .language-bash}
+we see:
+
+~~~
+==> aust_mp_twitter_data/2016Census_G01_AUS_SA1.csv <==
+SA1_7DIGITCODE_2016,Tot_P_M,Tot_P_F,Tot_P_P,Age_0_4_yr_M,Age_0_4_yr_F,Age_0_4_yr_P,(...)
+1100701,140,116,256,6,7,8(...)
+
+==> aust_mp_twitter_data/20180628-austmpdata.csv <==
+district,link,name,party,phonenumber,twitter
+"Warringah, New South Wales",https://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=EZ5,Hon Tony Abbott MP,Liberal Party of Australia,(02) 9977 6411,http://twitter.com/TonyAbbottMHR
+
+==> aust_mp_twitter_data/CED_2017_AUST.csv <==
+"SA1_MAINCODE_2016","CED_CODE_2017","CED_NAME_2017","STATE_CODE_2017","STATE_NAME_2017","AREA_ALBERS_SQKM"
+"11901135801","101","Banks","1","New South Wales",0.1146
+~~~
+{: .output}
+
+We see the following columns of interest:
+
+* `Tot_P_P`. Described by the [Census Metadata]({{page.root}}/data/aust_mp_twitter_data/Metadata/Metadata_2016_GCP_DataPack.xlsx) as: 
+~~~
+G3  Tot_P_P Total_Persons_Persons G01 G01a  Persons
+~~~
+* The "SA1 Maincode" columns, suggesting linking; and
+* The the "Party" and "Twitter" columns of "our own" web-scraped data. 
+
+To a first approximation, we can answer Petra's question!
+
+
+
+> ## Direct database csv loading
+>
+> CSV, comma separated values, or "flat-file" files are one of the preferred means of exchanging data produced from spreadsheets and databases. When the data is produced directly from a computer, for a computer's consumption, it is very easy to load. However, this process is fragile and when we are dealing with "denormalized" data, we will have to perform cleaning steps before the data is ready for use.
+{: .callout}
+
+While we can enter queries directly into our database, this approach does not scale well when we need to make tweaks to complex queries or we need to write a series of queries to get the data we want. Therefore, we want to make our scripts in a text editor.
+
+Let us start by exploring the sqlite3 interface.
 
 run:
 
@@ -161,9 +217,9 @@ CREATE TABLE austmpdata(
 {: .output .language-sql}
 
 
-This output is a maximally generic table -- but it is a table which holds our data. This is nothing we couldn't do in a spreadsheet. Yet.
+This output is a maximally generic table -- but it is a table which holds our data. This is nothing we couldn't do in a spreadsheet. [Yet.](https://yarn.co/yarn-clip/4c039198-d848-4228-93a8-896208c04526)
 
-However, now let us try to get data from multiple tables at the same time.
+Now, however, let us try to interact with multiple tables at the same time.
 
 ## Writing a script to load our research database
 
@@ -280,12 +336,12 @@ Looking at the output above, there should be a moment of "Huh, that's funny." at
 > Let's practice some SQL. Write queries which answer the following questions:
 > 
 > * Using the `LIKE` operator, which MPs are listed as Doctors? 
-> * What is the SUM area of each state?
+> * What is the `SUM()` area of each state?
 > 
 > ### Hints:
 > 
-> * The wildcard operator is '%' for LIKE.
-> * We need to GROUP BY before we aggregate with SUM
+> * The wildcard operator is `%` for `LIKE`.
+> * We need to `GROUP BY` before we aggregate with `SUM()`
 >
 > > ## Solution
 > > 
@@ -317,8 +373,8 @@ In sqlite run:
 ~~~
 sqlite> .echo off
 sqlite> .null -null-
-sqlite> SELECT * from austmp where twitter is null limit 5;
-sqlite> SELECT * from austmp where twitter = '' limit 5;
+sqlite> SELECT * FROM austmp WHERE twitter is null LIMIT 5;
+sqlite> SELECT * FROM austmp WHERE twitter = '' LIMIT 5;
 ~~~
 
 We should expect to see the various members of parliament who don't have recorded Twitter handles to show up in the first query. Unfortunately, they show up in the second. Since `''` counts as a value, we can't run aggregate statistics on it, and so must clean it up.
@@ -364,7 +420,7 @@ Melbourne Ports, Victoria               https://www.aph.gov.au/Senators_and_Memb
 
 Now we move beyond querying single tables. When dealing with other peoples' data, finding what can serve as an identifier can take some time and usually messing about.
 
-If we characterise the 3 csv files using `head -2 *.csv` we see:
+If we characterise the 3 csv files using `head -2 aust_mp_twitter_data/*.csv` we see:
 
 ~~~
 ==> aust_mp_twitter_data/2016Census_G01_AUS_SA1.csv <==
@@ -397,7 +453,7 @@ Now we need to create `VIEW`s with those links as new columns.
 
 Let us find the queries we want to encode first. We know that ced needs to have a new column with: `CED_NAME_2017` + `. ` + `STATE_NAME_2017`, and that we need the last 7 digits of `SQ1_MAINCODE_2016`. The concatenation operator is `||` and the [SQLite manual](https://www.sqlite.org/lang_corefunc.html) defines `substr(X,Y)` as: "substr(X,Y) returns all characters through the end of the string X beginning with the Y-th."
 
-Let's try:
+Let's try starting `sqlite3` up once again, rerunning `.read aust_mp.sql` and then: 
 
 ~~~
 sqlite> SELECT ced_name_2017 || ', ' || state_name_2017 as district, substr(sa1_maincode_2016, 5)
@@ -445,7 +501,7 @@ We're going to operationalise that as: "The sum of the people in each district, 
 
 ## Joining tables
 
-Since we constructed the view previously, we now need to use that `ced_district_maincode` VIEW to JOIN the other two tables.
+Since we constructed the view previously, we now need to use that `ced_district_maincode` view to join the other two tables.
 
 Let's try:
 
