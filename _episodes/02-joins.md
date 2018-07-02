@@ -4,6 +4,7 @@ teaching: 30
 exercises: 10
 questions:
 - "What is the essential thing needed to combine data from different sources?"
+- "How do we answer research questions with SQL and other peoples' data?"
 objectives:
 - "Learn how to use a `VIEW` to save a query."
 - "Explore `JOIN`ining tables to answer a research question."

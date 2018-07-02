@@ -4,6 +4,7 @@ teaching: 30
 exercises: 10
 questions:
 - "What is the difference between a spreadsheet and a table?"
+- "How do I bulk load data into sqlite3?"
 objectives:
 - "Explore data from different locations using a single database"
 keypoints:
