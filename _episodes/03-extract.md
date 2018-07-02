@@ -74,9 +74,9 @@ with open(filename, 'r') as reader:
     for line in reader:
         count += 1
 
-print count
+print(count)
 ~~~
-{: .language-python}
+{: .source .language-python}
 
 This should look familiar by now:
 the filename is given as the first command-line argument (`sys.argv[1]`),
@@ -89,7 +89,7 @@ we close the file and print the count.
 We can run this program like this:
 
 ~~~ 
-$ python code/count-lines.py data/bibliography.csv
+$ python count-lines.py bibliography_data/bibliography.csv
 ~~~
 {: .language-bash}
 
@@ -113,7 +113,7 @@ because authors' names also contain commas (since they are formatted as "last, f
 What we can do instead is ask our favorite search engine for help.
 Sure enough,
 a search for "python csv" turns up
-[a library called `csv`](https://docs.python.org/2/library/csv.html),
+[a library called `csv`](https://docs.python.org/3/library/csv.html),
 which is part of the standard Python distribution.
 Its documentation includes a few examples,
 and after a couple of experiments,
@@ -129,7 +129,7 @@ import csv
 with open(sys.argv[1], 'r') as raw:
     reader = csv.reader(raw);
     for line in reader:
-        print line
+        print(line)
 
 ~~~
 {: .language-python}
@@ -148,7 +148,7 @@ we just print out each line after it has been processed by the CSV reader.
 Its first few lines of output are:
 
 ~~~ 
-$ python code/read-fields.py data/bibliography.csv | head -5
+$ python code/read-fields.py bibliography_data/bibliography.csv | head -5
 ~~~
 {: .language-bash}
 
@@ -157,7 +157,8 @@ $ python code/read-fields.py data/bibliography.csv | head -5
 ['85QV9X5F', 'journalArticle', '1995', "McClelland, J. L.; McNaughton, B. L.; O'Reilly, R. C.", 'Why There are Complementary Learning Systems in the Hippocampus and Neocortex: Insights from the Successes and Failures of Connectionist Models of Learning and Memory', 'Psychological Review', '', '', '', '', '', '', '', '', '', '', '', '', '']
 ['Z4X6DT6N', 'journalArticle', '1990', 'Ratcliff, R.', 'Connectionist models of recognition memory: constraints imposed by learning and forgetting functions.', 'Psychological review', '', '0033-295X', '', 'http://view.ncbi.nlm.nih.gov/pubmed/2186426', '', '', '', '', '', '', '', '', '']
 ['F5DGU3Q4', 'bookSection', '1989', 'McCloskey, M.; Cohen, N. J.', 'Catastrophic Interference in Connectionist Networks: The Sequential Learning Problem', 'The Psychology of Learning and Motivation, Vol. 24', '', '', '', '', '', '', '', '', '', '', '', '', '']
-['PNGQMCP5', 'conferencePaper', '2006', 'Bucilu\xc7\x8e, Cristian; Caruana, Rich; Niculescu-Mizil, Alexandru', 'Model compression', 'Proceedings of the 12th ACM SIGKDD international conference on Knowledge discovery and data mining', '', '', '', '', '', '', '', '', '', '', '', '', '']
+['PNGQMCP5', 'conferencePaper', '2006', 'Buciluǎ, Cristian; Caruana, Rich; Niculescu-Mizil, Alexandru', 'Model compression', 'Proceedings of the 12th ACM SIGKDD international conference on Knowledge discovery and data mining', '', '', '', '', '', '', '', '', '', '', '', '', '']
+
 ~~~
 {: .language-python .output}
 
@@ -178,7 +179,7 @@ import csv
 with open(sys.argv[1], 'r') as raw:
     reader = csv.reader(raw);
     for line in reader:
-        print line[0], line[3]
+        print(line[0], line[3])
 
 ~~~
 {: .language-python}
@@ -199,10 +200,28 @@ each with a single author.
 This is the right time to use `str.split`:
 the authors' names are separated by semi-colons,
 so we can break each list of authors on those
-and use another loop to print the results one by one:
+and use another loop to print the results one by one.
 
 ~~~ 
-$ python code/display-authors-1.py data/bibliography.csv | head -10
+# display-authors-1.py
+# Print (key, author) pairs.
+
+import sys
+import csv
+
+with open(sys.argv[1], 'r') as raw:
+    reader = csv.reader(raw);
+    for line in reader:
+        key, authors = line[0], line[3]
+        for auth in authors.split(';'):
+            print(key, auth)
+
+~~~
+{: .language-python}
+
+
+~~~ 
+$ python code/display-authors-1.py bibliography_data/bibliography.csv | head -10
 ~~~
 {: .language-bash}
 
@@ -227,7 +246,7 @@ the second and subsequent name on each line comes out with an unwanted space at 
 What happens if we try to split on a semi-colon plus a space?
 
 ~~~ 
-# display-authors-2.py
+# display-authors-1.py
 # Print (key, author) pairs.
 
 import sys
@@ -238,7 +257,7 @@ with open(sys.argv[1], 'r') as raw:
     for line in reader:
         key, authors = line[0], line[3]
         for auth in authors.split('; '): # semi-colon plus space instead of semi-colon
-            print key, auth
+            print(key, auth)
 
 ~~~
 {: .language-python}
@@ -291,7 +310,7 @@ Changes to be committed:
   new file:   code/display-authors-2.py
   new file:   code/display-fields.py
   new file:   code/read-fields.py
-  new file:   data/bibliography.csv
+  new file:   bibliography_data/bibliography.csv
 ~~~
 {: .output}
 
@@ -308,7 +327,7 @@ $ git commit -m "Extracting (key, author) pairs from bibliography"
  create mode 100644 code/display-authors-2.py
  create mode 100644 code/display-fields.py
  create mode 100644 code/read-fields.py
- create mode 100644 data/bibliography.csv
+ create mode 100644 bibliography_data/bibliography.csv
 ~~~
 {: .output}
 
@@ -328,7 +347,7 @@ $ git commit -m "Extracting (key, author) pairs from bibliography"
 {: .challenge}
 
 
-> ## Breaking Even {.challenge}
+> ## Breaking Even 
 >
 > If it takes 10 minutes to write a program to do a task
 > that only takes 5 minutes to do by hand,
