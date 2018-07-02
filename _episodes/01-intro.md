@@ -41,8 +41,8 @@ How can we turn this question into something we can answer?
 
 We start with the question: "What can we measure?"
 
-* We know politicans who are on twitter from the list of Australian members of parliament.
-* We know what party those politics are from, from the same list.
+* We know which politicians are on twitter from the list of Australian members of parliament.
+* We know what party those politicians are from, from the same list.
 * We know that the 2016 census has demographic population per "Statistical Area"
 * We know that the ABS publishes a dataset which names the regions alongside their statistical identifiers. 
 
@@ -119,9 +119,7 @@ To a first approximation, we can answer Petra's question!
 
 While we can enter queries directly into our database, this approach does not scale well when we need to make tweaks to complex queries or we need to write a series of queries to get the data we want. Therefore, we want to make our scripts in a text editor.
 
-Let us start by exploring the sqlite3 interface.
-
-run:
+Let us start by exploring the sqlite3 interface:
 
 ~~~
 $ sqlite3
