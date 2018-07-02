@@ -10,16 +10,17 @@ Bahlai's Law says,
 ~~~
 {: .quotation}
 
-This short example will show how to take such data ---
-in this case, a bibliography embedded in a spreadsheet ---
-and turn it into something usable.
+
+We open this lesson by taking data from three different data sources, one scraped by learners in the [library carpentry webscraping lesson](https://resbazsql.github.io/lc-webscraping/) and joining them together to answer a research question.
+
+We will then take such data, a bibliography embedded in a spreadsheet, and turn it into something usable.
 
 Along the way,
 we will use all of the tools introduced so far
 to extract, reformat, and analyze information
 that would otherwise be difficult or impossible to work with.
 
-We will end up taking spreadsheet data from two *different* spreadsheets and combining it to produce an answer to a (very small) research question.
+
 
 > ## Prerequisites 
 >
