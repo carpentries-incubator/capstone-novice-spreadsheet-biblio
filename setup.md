@@ -27,7 +27,7 @@ Please download the files we'll be using: [mpTwitterAndBiblio.zip]({{page.root}}
 
 ### Shell and Python
 The second part of the lesson requires the Python programming language (Version 3.5 or greater) and access to a command-line interface (shell) on your computer.
-Please refer to [the Software Carpentry setup instructions](http://swcarpentry.github.io/workshop-template/#setup) for
+Please refer to [the Software Carpentry setup instructions](http://carpentries.github.io/workshop-template/#setup) for
 *the Bash shell* and *Python* if you need guidance.
 
 
