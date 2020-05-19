@@ -27,6 +27,10 @@ repository: <USERNAME>/<PROJECT>
 # Email address, no mailto:
 email: "brian.ballsun-stanton@mq.edu.au"
 
+# Life cycle stage of the lesson
+# possible values: "pre-alpha", "alpha", "beta", "stable"
+life_cycle: "alpha"
+
 # Sites.
 amy_site: "https://amy.software-carpentry.org/workshops"
 carpentries_github: "https://github.com/carpentries"
